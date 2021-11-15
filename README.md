@@ -1,2 +1,2 @@
 # FrontEND
-Repositorio para el FrontEND del la aplicacion 
+Repositorio para el FrontEND de la aplicacion
