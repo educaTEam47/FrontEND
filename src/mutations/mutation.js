@@ -1,0 +1,89 @@
+import React from "react";
+import { gql } from '@apollo/client'
+
+export const loginql = gql`
+mutation loginUsername($username:String!,$password:String!){
+    login(input:{
+        username:$username
+        password:$password
+    }) {
+        login
+        token
+        error{
+            path
+            message
+          }
+      }
+}
+`
+export const registerql = gql`
+mutation register($nombres:String!, $apellidos:String!, $username:String!,$email:String!, $password:String!,$rol:String!){
+    registro(input:{
+      nombres:$nombres
+      apellidos:$apellidos
+      username:$username
+      email:$email
+      password:$password
+      rol:$rol
+    }){
+      user{
+        _id
+        nombres
+        apellidos
+        email
+        rol
+      }
+      register
+      error{
+        path
+        message
+      }
+    }
+  }
+`
+export const updateUserql = gql`
+mutation updateUserql($id:ID!,$nombres:String,$apellidos:String,$identificacion:String,$numIdentificacion:String,$Carrera:String,$email:String){
+  updateUser(id:$id,input:{
+    nombres:$nombres
+    apellidos:$apellidos
+    identificacion:$identificacion
+    numIdentificacion:$numIdentificacion
+    Carrera:$Carrera
+    email:$email
+  }) {
+    update
+    user{
+      nombres
+      apellidos
+      rol
+      email
+      identificacion
+      numIdentificacion
+      Carrera
+    }
+    error{
+      path
+      message
+    }
+  }
+}
+`
+export const createProjectql = gql`
+mutation newProject($tittle:String!,$description:String!,$Horas:String!){
+  createProject(input:{
+    tittle:$tittle
+    description:$description
+    Horas:$Horas
+  }){
+    Project{
+      tittle
+      description
+    }
+    create
+    error{
+      path
+      message
+    }
+  }
+}
+`
