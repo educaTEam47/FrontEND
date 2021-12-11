@@ -15,6 +15,7 @@ export const getUserql = gql`
 query user($id:ID!){
     getUser(id:$id){
         user{
+            _id
             nombres
             apellidos
             rol
@@ -34,10 +35,33 @@ query user($id:ID!){
 export const getProjects = gql`
 query{
     getProjects {
+      _id
       tittle
       description
       Horas
     }
   }
+`
+export const getCourseql = gql`
+query getCourse($id:ID!){
+  getProject(id:$id){
+    tittle
+    description
+    Horas
+    lider{
+      _id
+      nombres
+      apellidos
+      email
+      rol
+    }
+    people{
+      nombres
+      apellidos
+      email
+      rol
+    }
+  }
+}
 `
 

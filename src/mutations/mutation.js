@@ -87,3 +87,31 @@ mutation newProject($tittle:String!,$description:String!,$Horas:String!){
   }
 }
 `
+export const delTeacherql =gql` 
+mutation deleteTeacher($idCourse:ID!, $idTeacher:ID!){
+  delTeacher(idCourse:$idCourse,idTeacher:$idTeacher)
+}
+`
+export const addTeacherql = gql` 
+mutation addTeacher($idTeacher:ID!, $idProject:ID!){
+  addTeacher(idTeacher:$idTeacher,idProject:$idProject) {
+    project{
+      _id
+      tittle
+      description
+      Horas
+      lider{
+        nombres
+      }
+      people{
+        nombres
+      }
+    }
+    error{
+      path
+      message
+    }
+    add
+  }
+}
+`

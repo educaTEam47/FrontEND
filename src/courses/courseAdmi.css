@@ -1,0 +1,66 @@
+.Observar{
+    background: none;
+    border: none;
+}
+.Observar:hover{
+    background: rgb(63, 71, 97);
+}
+.Observar::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Observar:hover::after{
+    text-align: center;
+    content: "Informacion";
+    margin-top: 2%;
+    width: 150px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
+.Editar{
+    background: none;
+    border: none;
+}
+.Editar:hover{
+    background: rgb(63, 71, 97);
+}
+.Editar::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Editar:hover::after{
+    text-align: center;
+    content: "Editar";
+    margin-top: 2%;
+    width: 80px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
+.Eliminar{
+    background: none;
+    border: none;
+}
+.Eliminar:hover{
+    background: rgb(63, 71, 97);
+}
+.Eliminar::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Eliminar:hover::after{
+    text-align: center;
+    content: "Eliminar";
+    margin-top: 2%;
+    width: 80px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}

@@ -7,6 +7,8 @@ import UpdateUser from './update/updateUser';
 import GetUser from './getUser/getUser';
 import Course from './courses/courses';
 import GetCourses from './courses/getCourses';
+import GetCoursesAdmi from './courses/courseAdmi';
+import UpdateCourse from './update/updateCourse'
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
       <Route path='/user' element={<GetUser/>}/>
       <Route path='/createCourse' element={<Course/>}/>
       <Route path='/getProjects' element={<GetCourses/>}/>
+      <Route path='/getProjectsAdmi' element={<GetCoursesAdmi/>}/>
+      <Route path='/editProject' element={<UpdateCourse/>}/>
     </Routes>
     </div>
   );
