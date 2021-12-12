@@ -56,6 +56,7 @@ query getCourse($id:ID!){
       rol
     }
     people{
+      _id
       nombres
       apellidos
       email

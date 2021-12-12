@@ -64,3 +64,25 @@
     position: absolute;
     background-color: rgb(38, 38, 60);
 }
+.Add{
+    background: none;
+    border: none;
+}
+.Add:hover{
+    background: rgb(63, 71, 97);
+}
+.Add::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Add:hover::after{
+    text-align: center;
+    content: "Agregar";
+    margin-top: 2%;
+    width: 80px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}

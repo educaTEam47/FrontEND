@@ -115,3 +115,42 @@ mutation addTeacher($idTeacher:ID!, $idProject:ID!){
   }
 }
 `
+export const updateProjectql = gql` 
+mutation updateProj($id:ID!,$tittle:String,$description:String,$Horas:String){
+  updateProject(id:$id,input:{
+    tittle:$tittle
+    description:$description
+    Horas:$Horas
+  }){
+    Project{
+      tittle
+      description
+      Horas
+    }
+    update
+    error{
+      path
+      message
+    }
+  }
+}
+`
+export const addStudentql =gql ` 
+mutation addStude($idStudent:ID!,$idProject:ID!){
+  addStudent(idStudent:$idStudent,idProject:$idProject){
+    project{
+      tittle
+    }
+    add
+    error{
+      path
+      message
+    }
+  }
+}
+`
+export const delStudentql =gql` 
+mutation delStudentql($idProject:ID!, $idStudent:ID!){
+  delStudent(idProject:$idProject,idStudent:$idStudent)
+}
+`
