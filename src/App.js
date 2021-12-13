@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './home';
 import Login from './login/login';
 import Register from './register/register';
+import Profile from './login/profile';
 import GetUsers from './getUser/getUsers';
 import UpdateUser from './update/updateUser';
 import GetUser from './getUser/getUser';
@@ -39,6 +40,7 @@ function App() {
     <Route path="/" element={<Home/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
+      <Route path="/profile" element={<Profile/>}/>
       <Route path='/allUsers' element={<GetUsers/>}/>
       <Route path='/updateUser' element={<UpdateUser/>}/>
       <Route path='/user' element={<GetUser/>}/>
