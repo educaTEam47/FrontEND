@@ -21,7 +21,7 @@ function UpdateCourse() {
     const [people, setpeople] = useState([])
     const cookies = new Cookies();
     const id = cookies.get('edit-Course')
-    console.log(id)
+    //console.log(id)
     const { data } = useQuery(getCourseql,
         {
             variables: { id }
@@ -87,8 +87,8 @@ function UpdateCourse() {
         })
 
         if (newId) {
-            console.log(idTeacher)
-            console.log(newId)
+            //console.log(idTeacher)
+            //console.log(newId)
             if (newId.length !== 24) {
                 Swal.fire("El ID introducido no es valido")
             }
@@ -103,7 +103,7 @@ function UpdateCourse() {
                         }
                     )
 
-                    console.log(response2.data.addTeacher.add)
+                    //console.log(response2.data.addTeacher.add)
                     if (response2.data.addTeacher.add) {
                         const response = await delForm(
                             {

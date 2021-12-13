@@ -10,6 +10,7 @@ import GetCourses from './courses/getCourses';
 import GetCoursesAdmi from './courses/courseAdmi';
 import UpdateCourse from './update/updateCourse';
 import CourseTeacher from './courses/courseTeacher';
+import EditProjectTeacher from './update/updateCourseTeacher';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Route path='/getProjectsAdmi' element={<GetCoursesAdmi/>}/>
       <Route path='/editProject' element={<UpdateCourse/>}/>
       <Route path='/courseteacher' element={<CourseTeacher/>}/>
+      <Route path='/editProjectTeacher' element={<EditProjectTeacher/>}/>
     </Routes>
     </div>
   );

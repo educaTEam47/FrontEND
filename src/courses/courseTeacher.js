@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
-import { validateql } from '../mutations/mutation'
+import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
 import { getUserql } from '../queries/queries'
 import { useQuery, useMutation } from '@apollo/client'
 import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
@@ -17,8 +17,8 @@ function CourseTeacher() {
     useEffect(() => {
         response()
     }, [])
-    const [id,setId] = useState("")
-    const [cursos,setCursos] = useState([])
+    const [id, setId] = useState("")
+    const [cursos, setCursos] = useState([])
     const [validateForm] = useMutation(validateql)
     const response = async () => {
         const response1 = await validateForm(
@@ -43,7 +43,7 @@ function CourseTeacher() {
                         text: response1.data.validate.rol + " " + response1.data.validate.nombres,
                         icon: "success"
                     })
-                     setId(response1.data.validate.id)
+                    setId(response1.data.validate.id)
                 }
                 else {
                     Swal.fire({
@@ -59,48 +59,88 @@ function CourseTeacher() {
         {
             variables: { id }
         })
-    useEffect(()=>{
-        if(id){
-            if(data){
-                if(data.getUser){
-                    setCursos(data.getUser.cursos)
+    useEffect(() => {
+        if (id) {
+            if (data) {
+                if (data.getUser) {
+                    setCursos(data.getUser.user.cursos)
                 }
             }
         }
-    },[data])
+    }, [data])
     console.log(data)
-    // let id =0
-    // const {data1} = useQuery(getUserql,
-    //     {
-    //         variables:{id}
-    //     })
-    // console.log(data1)
+
+    const [addTeacher] = useMutation(addTeacherql)
+    const addCourse = async () => {
+        const { value: newId } = await Swal.fire({
+            title: 'Escriba el ID del proyecto',
+            input: 'text',
+            inputLabel: 'La nueva ID',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Necesita escribir un ID!'
+                }
+            }
+        })
+        if (newId) {
+            if (newId.length !== 24) {
+                Swal.fire("El ID introducido no es valido")
+            }
+            else {
+                let filtro = cursos.filter(p => p._id == newId)
+                if (filtro[0]) {
+                    if (newId == filtro[0]._id) {
+                        Swal.fire({
+                            icon: "error",
+                            text: "No puede introducir un ID que ya esta agregado"
+                        })
+                    }
+                }
+                else {
+                    const response = await addTeacher(
+                        {
+                            variables: { idTeacher: id, idProject: newId }
+                        }
+                    )
+                    if (response.data.addTeacher.add) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Proyecto Agregado",
+                            text: "Se ha insertado el grupo",
+                        })
+                        window.location.replace('./courseteacher')
+                    }
+                }
+            }
+        }
+    }
+
+    const envio = (idProject) =>{
+        const cookies = new Cookies();
+        cookies.set('edit-Course', idProject, { maxAge: 10 * 60 }, { path: '/' })
+        window.location.replace('./editProjectTeacher')
+    }
+
     return (
         <div className="container">
             <Table striped bordered hover variant="dark" className="text-center">
-            <thead>
+                <thead>
                     <tr>
                         <th>#</th>
                         <th>Titulo</th>
                         <th>Descripcion</th>
                         <th>Horas</th>
-                        <th>Opciones</th>
-                        <th><Button className="Add"><AiOutlineUserAdd size="1rem" /></Button></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data && data.getUser.user.cursos.map((val, key) => {
+                    {cursos.map((val, key) => {
                         return (
-                            <tr>
+                            <tr onClick={()=>envio(val._id)}>
                                 <td>{key + 1}</td>
                                 <td>{val.tittle}</td>
                                 <td>{val.description}</td>
                                 <td>{val.Horas}</td>
-                                <td>
-                                    <Button className="Observar" ><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Eliminar" ><FiDelete size="1.5rem" color="red" /></Button>
-                                </td>
-                                <td></td>
                             </tr>
                         )
                     })}
