@@ -1,0 +1,19 @@
+.card{
+   margin: 0 auto;
+   margin-top: 10px;
+}
+.container{
+   position: flex;
+}
+.card-body{
+   justify-content: center;
+   align-content: center;
+   margin: 0 auto;
+}
+.tittle{
+   margin: 0 auto;
+   margin-top: 10px;
+}
+Button{
+   margin:1%;  
+}
