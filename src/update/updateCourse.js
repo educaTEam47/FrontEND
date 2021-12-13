@@ -261,9 +261,58 @@ function UpdateCourse() {
             }
         }
     }
+    const delTeacher = (newId) =>{
+        if (newId) {
+            if (newId.length !== 24) {
+                Swal.fire("El ID introducido no es valido")
+            }
+            else {
+                Swal.fire({
+                    title: '¿Esta seguro?',
+                    text: "El profesor sera eliminado con todos sus datos del curso",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, quiero eliminar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const response = await delForm(
+                            {
+                                variables: { idTeacher:newId, idCourse: id }
+                            }
+                        )
+                        Swal.fire(
+                            'Eliminado!',
+                            'El profesor ha sido eliminado',
+                            'success'
+                        )
+                        window.location.replace('./editProject')
+                    }
+                })
+            }
+        }
+    }
+    const ObserStudent = (idStudent) =>{
+        let filtro = data.getProject.people.filter(p => p._id==idStudent)
+        let nombre=filtro[0].nombres +" "+ filtro[0].apellidos
+        Swal.fire({
+            title:nombre,
+            text:filtro[0].rol,
+            icon:'info'
+        })
+    }
+    const ObserTeacher = (idTeacher) =>{
+        let filtro = data.getProject.lider.filter(p => p._id==idTeacher)
+        Swal.fire({
+            title:filtro[0].nombres +" "+ filtro[0].apellidos,
+            text:filtro[0].rol,
+            icon:'info'
+        })
+    }
     return (
         <div className="container">
-            <Card className="text-center" style={{ width: '18rem' }}>
+            <Card className="text-center" style={{ width: '20rem' }}>
                 <Card.Body className="card-body">
                     <Card.Title className="tittle">Informacion del Curso</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
@@ -283,8 +332,6 @@ function UpdateCourse() {
                             aria-label="Titulo"
                             aria-describedby="basic-addon1"
                         />
-                    </InputGroup>
-                    <InputGroup className="mb-3">
                         <FloatingLabel controlId="floatingTextarea2" label="Descripcion">
                             <Form.Control
                                 as="textarea"
@@ -308,6 +355,7 @@ function UpdateCourse() {
                     <Button onClick={enviar}>Actualizar Datos</Button>
                 </Card.Body>
             </Card>
+            <hr></hr>
             <Table striped bordered hover variant="dark" className="text-center">
                 <thead>
                     <tr>
@@ -330,9 +378,9 @@ function UpdateCourse() {
                                 <td>{val.email}</td>
                                 <td>{val.rol}</td>
                                 <td>
-                                    <Button className="Observar"><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Editar" onClick={() => reemplazar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
-                                    <Button className="Eliminar"><FiDelete size="1.5rem" color="red" /></Button>
+                                    <Button className="Observar" onClick={()=>ObserTeacher(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Reemplazar" onClick={() => reemplazar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                    <Button className="Eliminar" onClick={()=> delTeacher(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                                 <td></td>
                             </tr>
@@ -363,7 +411,7 @@ function UpdateCourse() {
                                 <td>{val.email}</td>
                                 <td>{val.rol}</td>
                                 <td>
-                                    <Button className="Observar"><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Observar" onClick={()=>ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
                                     <Button className="Eliminar" onClick={()=>delStudent(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                                 <td></td>

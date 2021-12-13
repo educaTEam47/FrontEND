@@ -23,6 +23,12 @@ query user($id:ID!){
             identificacion
             numIdentificacion
             Carrera
+            cursos{
+              _id
+              tittle
+              description
+              Horas
+            }
         }
         search
         error{

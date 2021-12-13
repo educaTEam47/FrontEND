@@ -154,3 +154,17 @@ mutation delStudentql($idProject:ID!, $idStudent:ID!){
   delStudent(idProject:$idProject,idStudent:$idStudent)
 }
 `
+export const validateql =gql` 
+mutation validateToken($token:String!){
+  validate(token:$token) {
+    id
+    nombres
+    rol
+    validacion
+    error{
+      path
+      message
+    }
+  }
+}
+`
