@@ -14,6 +14,7 @@ import jwt from 'jsonwebtoken'
 function CourseTeacher() {
     //console.log(token)
     const [id, setId] = useState("")
+    const [email,setEmail] = useState("")
     const [cursos, setCursos] = useState([])
 
     //----------------------------------------------------------------------------------------------------------------
@@ -48,6 +49,7 @@ function CourseTeacher() {
             else {
                 if (response1.data.validate.rol === "Lider") {
                     setId(response1.data.validate.id)
+                    setEmail(response1.data.validate.email)
                     setAuth(response1.data.validate.validacion)
                 }
                 else {
@@ -65,9 +67,8 @@ function CourseTeacher() {
 
     const { data } = useQuery(getUserql,
         {
-            variables: { id }
+            variables: { email }
         })
-
     useEffect(() => {
         if (auth === true) {
             if (id) {

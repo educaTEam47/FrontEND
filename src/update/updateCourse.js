@@ -71,6 +71,7 @@ function UpdateCourse() {
         {
             variables: { id }
         });
+    console.log(data)
     useEffect(() => {
         if (auth === true) {
             if (id) {
@@ -120,7 +121,7 @@ function UpdateCourse() {
     const [delForm] = useMutation(delTeacherql)
     const [addTeacherForm] = useMutation(addTeacherql)
 
-    const reemplazar = async (idTeacher) => {
+    const reemplazar = async (emailTeacher) => {
         //console.log("Reemplazar")
         const { value: newId } = await Swal.fire({
             title: 'Escriba el ID del nuevo profesor',
@@ -135,47 +136,43 @@ function UpdateCourse() {
         })
 
         if (newId) {
-            //console.log(idTeacher)
-            //console.log(newId)
-            if (newId.length !== 24) {
-                Swal.fire("El ID introducido no es valido")
+            console.log(emailTeacher)
+            console.log(newId)
+            if (newId === emailTeacher) {
+                Swal.fire("No puede introducir un ID registrado")
             }
             else {
-                if (newId === idTeacher) {
-                    Swal.fire("No puede introducir un ID registrado")
-                }
-                else {
-                    const response2 = await addTeacherForm(
+                const response2 = await addTeacherForm(
+                    {
+                        variables: { email: newId, idProject: id }
+                    }
+                )
+
+                //console.log(response2.data.addTeacher.add)
+                if (response2.data.addTeacher.add) {
+                    const response = await delForm(
                         {
-                            variables: { idTeacher: newId, idProject: id }
+                            variables: { email: emailTeacher, idCourse: id }
                         }
                     )
-
-                    //console.log(response2.data.addTeacher.add)
-                    if (response2.data.addTeacher.add) {
-                        const response = await delForm(
-                            {
-                                variables: { idTeacher, idCourse: id }
-                            }
-                        )
-                        //console.log(response)
-                        Swal.fire({
-                            icon: 'success',
-                            title: "Cambio Realizado",
-                            text: "Se ha realizado el cambio de profesor",
-                        })
-                        window.location.replace('./editProject')
-                    }
-                    else {
-                        let error = response2.data.addTeacher.error
-                        let message = error.map(p => p.message)
-                        Swal.fire({
-                            icon: 'error',
-                            title: "Error",
-                            text: message,
-                        })
-                    }
+                    console.log(response)
+                    Swal.fire({
+                        icon: 'success',
+                        title: "Cambio Realizado",
+                        text: "Se ha realizado el cambio de profesor",
+                    })
+                    window.location.replace('./editProject')
                 }
+                else {
+                    let error = response2.data.addTeacher.error
+                    let message = error.map(p => p.message)
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Error",
+                        text: message,
+                    })
+                }
+
             }
         }
     }
@@ -194,281 +191,256 @@ function UpdateCourse() {
             }
         })
         if (newId) {
-            if (newId.length !== 24) {
+            const response = await addStudentForm(
+                {
+                    variables: { idProject: id, email: newId }
+                }
+            )
+            if (response.data.addStudent.error) {
+                let error = response.data.addStudent.error
+                let message = error.map(p => p.message)
                 Swal.fire({
                     icon: 'error',
                     title: "Error",
-                    text: "Debe ingresar un ID valido"
+                    text: message
                 })
             }
             else {
-                const response = await addStudentForm(
-                    {
-                        variables: { idProject: id, idStudent: newId }
-                    }
-                )
-                if (response.data.addStudent.error) {
-                    let error = response.data.addStudent.error
-                    let message = error.map(p => p.message)
-                    Swal.fire({
-                        icon: 'error',
-                        title: "Error",
-                        text: message
-                    })
-                }
-                else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: "Agregado Exitosamente",
-                        text: "El estudiante ha sido agregado"
-                    })
-                    window.location.replace('./editProject')
-                }
+                Swal.fire({
+                    icon: 'success',
+                    title: "Agregado Exitosamente",
+                    text: "El estudiante ha sido agregado"
+                })
+                window.location.replace('./editProject')
             }
+
         }
     }
 
     const [delStudentForm] = useMutation(delStudentql)
     const delStudent = async (newId) => {
         console.log(newId)
-        if (newId) {
-            if (newId.length !== 24) {
-                Swal.fire("El ID introducido no es valido")
-            }
-            else {
-                Swal.fire({
-                    title: '¿Esta seguro?',
-                    text: "El estudiante sera eliminado con todos sus datos del curso",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, quiero eliminar'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        const response = await delStudentForm(
-                            {
-                                variables: { idProject: id, idStudent: newId }
-                            }
-                        )
-                        Swal.fire(
-                            'Eliminado!',
-                            'El estudiante ha sido eliminado',
-                            'success'
-                        )
-                        window.location.replace('./editProject')
-                    }
-                })
-            }
-        }
-    }
-
-    const addTeacher = async () => {
-        const { value: newId } = await Swal.fire({
-            title: 'Escriba el ID del profesor a agregar',
-            input: 'text',
-            inputLabel: 'La nueva ID',
-            showCancelButton: true,
-            inputValidator: (value) => {
-                if (!value) {
-                    return 'Necesita escribir un ID!'
-                }
-            }
-        })
-        if (newId) {
-            if (newId.length !== 24) {
-                Swal.fire({
-                    icon: 'error',
-                    title: "Error",
-                    text: "Debe ingresar un ID valido"
-                })
-            }
-            else {
-                const response = await addTeacherForm(
-                    {
-                        variables: { idTeacher: newId, idProject: id }
-                    }
-                )
-                if (response.data.addTeacher.error) {
-                    let error = response.data.addTeacher.error
-                    let message = error.map(p => p.message)
-                    Swal.fire({
-                        icon: 'error',
-                        title: "Error",
-                        text: message
-                    })
-                }
-                else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: "Agregado Exitosamente",
-                        text: "El profesor ha sido agregado"
-                    })
+        if (newId){
+            Swal.fire({
+                title: '¿Esta seguro?',
+                text: "El estudiante sera eliminado con todos sus datos del curso",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, quiero eliminar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await delStudentForm(
+                        {
+                            variables: { idProject: id, email: newId }
+                        }
+                    )
+                    Swal.fire(
+                        'Eliminado!',
+                        'El estudiante ha sido eliminado',
+                        'success'
+                    )
                     window.location.replace('./editProject')
                 }
+            })
+
+    }
+}
+
+const addTeacher = async () => {
+    const { value: newId } = await Swal.fire({
+        title: 'Escriba el ID del profesor a agregar',
+        input: 'text',
+        inputLabel: 'La nueva ID',
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Necesita escribir un ID!'
             }
         }
-    }
-    const delTeacher = (newId) => {
-        if (newId) {
-            if (newId.length !== 24) {
-                Swal.fire("El ID introducido no es valido")
+    })
+    if (newId) {
+        const response = await addTeacherForm(
+            {
+                variables: { email: newId, idProject: id }
             }
-            else {
-                Swal.fire({
-                    title: '¿Esta seguro?',
-                    text: "El profesor sera eliminado con todos sus datos del curso",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, quiero eliminar'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        const response = await delForm(
-                            {
-                                variables: { idTeacher: newId, idCourse: id }
-                            }
-                        )
-                        Swal.fire(
-                            'Eliminado!',
-                            'El profesor ha sido eliminado',
-                            'success'
-                        )
-                        window.location.replace('./editProject')
+        )
+        if (response.data.addTeacher.error) {
+            let error = response.data.addTeacher.error
+            let message = error.map(p => p.message)
+            Swal.fire({
+                icon: 'error',
+                title: "Error",
+                text: message
+            })
+        }
+        else {
+            Swal.fire({
+                icon: 'success',
+                title: "Agregado Exitosamente",
+                text: "El profesor ha sido agregado"
+            })
+            window.location.replace('./editProject')
+        }
+    }
+}
+const delTeacher = (emailTeacher) => {
+    if (emailTeacher) {
+        Swal.fire({
+            title: '¿Esta seguro?',
+            text: "El profesor sera eliminado con todos sus datos del curso",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, quiero eliminar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await delForm(
+                    {
+                        variables: { email: emailTeacher, idCourse: id }
                     }
+                )
+                Swal.fire(
+                    'Eliminado!',
+                    'El profesor ha sido eliminado',
+                    'success'
+                )
+                window.location.replace('./editProject')
+            }
+        })
+
+    }
+}
+const ObserStudent = (idStudent) => {
+    let filtro = data.getProject.people.filter(p => p._id == idStudent)
+    let nombre = filtro[0].nombres + " " + filtro[0].apellidos
+    Swal.fire({
+        title: nombre,
+        text: filtro[0].rol,
+        icon: 'info'
+    })
+}
+const ObserTeacher = (idTeacher) => {
+    let filtro = data.getProject.lider.filter(p => p._id == idTeacher)
+    Swal.fire({
+        title: filtro[0].nombres + " " + filtro[0].apellidos,
+        text: filtro[0].rol,
+        icon: 'info'
+    })
+}
+return (
+    <div className="container">
+        <Card className="text-center" style={{ width: '25rem' }}>
+            <Card.Body className="card-body">
+                <Card.Title className="tittle">Informacion del Curso</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
+                <InputGroup className="mb-3">
+                    <FormControl
+                        placeholder="Id Course"
+                        disabled value={id}
+                        aria-label="Id Course"
+                        aria-describedby="basic-addon1"
+                    />
+                </InputGroup>
+                <InputGroup className="mb-3">
+                    <FormControl
+                        placeholder="Titulo"
+                        value={tittle}
+                        onChange={e => settittle(e.target.value)}
+                        aria-label="Titulo"
+                        aria-describedby="basic-addon1"
+                    />
+                    <FloatingLabel controlId="floatingTextarea2" label="Descripcion">
+                        <Form.Control
+                            as="textarea"
+                            value={description}
+                            placeholder="Leave a comment here"
+                            onChange={e => setdescription(e.target.value)}
+                            style={{ height: '100px' }}
+                        />
+                    </FloatingLabel>
+                </InputGroup>
+                <InputGroup className="mb-3">
+                    <FormControl
+                        placeholder="Horas"
+                        type="number"
+                        value={Horas}
+                        onChange={e => setHoras(e.target.value)}
+                        aria-label="Horas"
+                        aria-describedby="basic-addon1"
+                    />
+                </InputGroup>
+                <Button onClick={enviar}>Actualizar Datos</Button>
+            </Card.Body>
+        </Card>
+        <hr></hr>
+        <Table striped bordered hover variant="dark" className="text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Opciones</th>
+                    <th><Button className="Add" onClick={addTeacher}><AiOutlineUserAdd size="1rem" /></Button></th>
+                </tr>
+            </thead>
+            <tbody>
+                {data && data.getProject.lider.map((val, key) => {
+                    return (
+                        <tr>
+                            <td>{key + 1}</td>
+                            <td>{val.nombres}</td>
+                            <td>{val.apellidos}</td>
+                            <td>{val.email}</td>
+                            <td>{val.rol}</td>
+                            <td>
+                                <Button className="Observar" onClick={() => ObserTeacher(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                <Button className="Reemplazar" onClick={() => reemplazar(val.email)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                <Button className="Eliminar" onClick={() => delTeacher(val.email)}><FiDelete size="1.5rem" color="red" /></Button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    )
                 })
-            }
-        }
-    }
-    const ObserStudent = (idStudent) => {
-        let filtro = data.getProject.people.filter(p => p._id == idStudent)
-        let nombre = filtro[0].nombres + " " + filtro[0].apellidos
-        Swal.fire({
-            title: nombre,
-            text: filtro[0].rol,
-            icon: 'info'
-        })
-    }
-    const ObserTeacher = (idTeacher) => {
-        let filtro = data.getProject.lider.filter(p => p._id == idTeacher)
-        Swal.fire({
-            title: filtro[0].nombres + " " + filtro[0].apellidos,
-            text: filtro[0].rol,
-            icon: 'info'
-        })
-    }
-    return (
-        <div className="container">
-            <Card className="text-center" style={{ width: '20rem' }}>
-                <Card.Body className="card-body">
-                    <Card.Title className="tittle">Informacion del Curso</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Id Course"
-                            disabled value={id}
-                            aria-label="Id Course"
-                            aria-describedby="basic-addon1"
-                        />
-                    </InputGroup>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Titulo"
-                            value={tittle}
-                            onChange={e => settittle(e.target.value)}
-                            aria-label="Titulo"
-                            aria-describedby="basic-addon1"
-                        />
-                        <FloatingLabel controlId="floatingTextarea2" label="Descripcion">
-                            <Form.Control
-                                as="textarea"
-                                value={description}
-                                placeholder="Leave a comment here"
-                                onChange={e => setdescription(e.target.value)}
-                                style={{ height: '100px' }}
-                            />
-                        </FloatingLabel>
-                    </InputGroup>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Horas"
-                            type="number"
-                            value={Horas}
-                            onChange={e => setHoras(e.target.value)}
-                            aria-label="Horas"
-                            aria-describedby="basic-addon1"
-                        />
-                    </InputGroup>
-                    <Button onClick={enviar}>Actualizar Datos</Button>
-                </Card.Body>
-            </Card>
-            <hr></hr>
-            <Table striped bordered hover variant="dark" className="text-center">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Opciones</th>
-                        <th><Button className="Add" onClick={addTeacher}><AiOutlineUserAdd size="1rem" /></Button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data && data.getProject.lider.map((val, key) => {
-                        return (
-                            <tr>
-                                <td>{key + 1}</td>
-                                <td>{val.nombres}</td>
-                                <td>{val.apellidos}</td>
-                                <td>{val.email}</td>
-                                <td>{val.rol}</td>
-                                <td>
-                                    <Button className="Observar" onClick={() => ObserTeacher(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Reemplazar" onClick={() => reemplazar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
-                                    <Button className="Eliminar" onClick={() => delTeacher(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        )
-                    })
-                    }
-                </tbody>
-            </Table>
-            <Table striped bordered hover variant="dark" className="text-center">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Opciones</th>
-                        <th><Button className="Add" onClick={addStudent}><AiOutlineUserAdd size="1rem" /></Button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data && data.getProject.people.map((val, key) => {
-                        return (
-                            <tr>
-                                <td>{key + 1}</td>
-                                <td>{val.nombres}</td>
-                                <td>{val.apellidos}</td>
-                                <td>{val.email}</td>
-                                <td>{val.rol}</td>
-                                <td>
-                                    <Button className="Observar" onClick={() => ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Eliminar" onClick={() => delStudent(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
-        </div>
-    )
+                }
+            </tbody>
+        </Table>
+        <Table striped bordered hover variant="dark" className="text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Opciones</th>
+                    <th><Button className="Add" onClick={addStudent}><AiOutlineUserAdd size="1rem" /></Button></th>
+                </tr>
+            </thead>
+            <tbody>
+                {data && data.getProject.people.map((val, key) => {
+                    return (
+                        <tr>
+                            <td>{key + 1}</td>
+                            <td>{val.nombres}</td>
+                            <td>{val.apellidos}</td>
+                            <td>{val.email}</td>
+                            <td>{val.rol}</td>
+                            <td>
+                                <Button className="Observar" onClick={() => ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                <Button className="Eliminar" onClick={() => delStudent(val.email)}><FiDelete size="1.5rem" color="red" /></Button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    )
+                })}
+            </tbody>
+        </Table>
+    </div>
+)
 }
 export default UpdateCourse;

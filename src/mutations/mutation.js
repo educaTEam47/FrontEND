@@ -88,13 +88,13 @@ mutation newProject($tittle:String!,$description:String!,$Horas:String!){
 }
 `
 export const delTeacherql =gql` 
-mutation deleteTeacher($idCourse:ID!, $idTeacher:ID!){
-  delTeacher(idCourse:$idCourse,idTeacher:$idTeacher)
+mutation deleteTeacher($idCourse:ID!, $email:String!){
+  delTeacher(idCourse:$idCourse,email:$email)
 }
 `
 export const addTeacherql = gql` 
-mutation addTeacher($idTeacher:ID!, $idProject:ID!){
-  addTeacher(idTeacher:$idTeacher,idProject:$idProject) {
+mutation addTeacher($email:String!, $idProject:ID!){
+  addTeacher(email:$email,idProject:$idProject) {
     project{
       _id
       tittle
@@ -136,8 +136,8 @@ mutation updateProj($id:ID!,$tittle:String,$description:String,$Horas:String){
 }
 `
 export const addStudentql =gql ` 
-mutation addStude($idStudent:ID!,$idProject:ID!){
-  addStudent(idStudent:$idStudent,idProject:$idProject){
+mutation addStude($email:String!,$idProject:ID!){
+  addStudent(email:$email,idProject:$idProject){
     project{
       tittle
     }
@@ -150,8 +150,8 @@ mutation addStude($idStudent:ID!,$idProject:ID!){
 }
 `
 export const delStudentql =gql` 
-mutation delStudentql($idProject:ID!, $idStudent:ID!){
-  delStudent(idProject:$idProject,idStudent:$idStudent)
+mutation delStudentql($idProject:ID!, $email:String!){
+  delStudent(idProject:$idProject,email:$email)
 }
 `
 export const validateql =gql` 
@@ -159,6 +159,7 @@ mutation validateToken($token:String!){
   validate(token:$token) {
     id
     nombres
+    email
     rol
     validacion
     error{
