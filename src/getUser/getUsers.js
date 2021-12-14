@@ -5,6 +5,9 @@ import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUsersql } from '../queries/queries'
 import { Button, Table } from 'react-bootstrap';
+import { FcInfo } from 'react-icons/fc'
+import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
+import { FiDelete } from 'react-icons/fi'
 import './getUsers.css'
 function GetUsers() {
     const { data } = useQuery(getUsersql)
@@ -54,6 +57,16 @@ function GetUsers() {
     }
     //################################################################################################################
 
+    const observar = (idUser) => {
+        let filtro = data.getUsers.filter(p => p._id === idUser)
+        Swal.fire({
+            title: filtro[0].nombres + " " + filtro[0].apellidos,
+            text: filtro[0].rol,
+            icon: 'info'
+        })
+    }
+
+
     return (
         <div className="container">
             <Table striped bordered hover variant="dark" className="text-center">
@@ -63,6 +76,7 @@ function GetUsers() {
                         <th>Nombres</th>
                         <th>Apellidos</th>
                         <th>Email</th>
+                        <th>Rol</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -70,14 +84,15 @@ function GetUsers() {
                     {data && data.getUsers.map((val, key) => {
                         return (
                             <tr>
-                                <td>{key+1}</td>
+                                <td>{key + 1}</td>
                                 <td>{val.nombres}</td>
                                 <td>{val.apellidos}</td>
                                 <td>{val.email}</td>
+                                <td>{val.rol}</td>
                                 <td>
-                                    <Button className="opciones">Ob</Button>
-                                    <Button className="opciones">Not</Button>
-                                    <Button className="opciones">Del</Button>
+                                    <Button className="Observar" onClick={()=>observar(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Editar" ><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                    <Button className="Eliminar" ><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                             </tr>
                         )

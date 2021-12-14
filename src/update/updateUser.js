@@ -18,10 +18,10 @@ function UpdateUser() {
     let token = localStorage.getItem('token')
     const { data } = useQuery(getUserql,
         {
-            variables: { id }
+            variables: { email }
         });
     useEffect(() => {
-        if (id !== '' || id) {
+        if (email !== '' || email) {
             if (data) {
                 if (data.getUser) {
                     if (data.getUser.user) {
@@ -43,7 +43,7 @@ function UpdateUser() {
     const enviar = async (e) => {
         const response = await updateForm(
             {
-                variables: { id, nombres, apellidos, identificacion, numIdentificacion, Carrera, email },
+                variables: { email, nombres, apellidos, identificacion, numIdentificacion, Carrera},
                 errorPolicy: "all"
             })
         //console.log(response)
@@ -79,8 +79,8 @@ function UpdateUser() {
                     <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
                     <InputGroup className="mb-3">
                         <FormControl
-                            placeholder="Id User"
-                            onChange={e => setid(e.target.value)}
+                            placeholder="email user"
+                            onChange={e => setemail(e.target.value)}
                             aria-label="Id User"
                             aria-describedby="basic-addon1"
                         />
@@ -135,15 +135,6 @@ function UpdateUser() {
                             value={Carrera}
                             onChange={e => setCarrera(e.target.value)}
                             aria-label="Carrera"
-                            aria-describedby="basic-addon1"
-                        />
-                    </InputGroup>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Email"
-                            value={email}
-                            onChange={e => setemail(e.target.value)}
-                            aria-label="Email"
                             aria-describedby="basic-addon1"
                         />
                     </InputGroup>
