@@ -12,14 +12,9 @@ import './courseAdmi.css'
 import jwt from 'jsonwebtoken'
 
 function CourseTeacher() {
-    let token = localStorage.getItem('token')
     //console.log(token)
-    useEffect(() => {
-        response()
-    }, [])
-    const [id, setId] = useState(null)
+    const [id, setId] = useState("")
     const [cursos, setCursos] = useState([])
-
 
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
@@ -66,11 +61,11 @@ function CourseTeacher() {
     }
     //################################################################################################################
 
-
     const { data } = useQuery(getUserql,
         {
             variables: { id }
         })
+
     useEffect(() => {
         if (auth === true) {
             if (id) {
@@ -83,6 +78,7 @@ function CourseTeacher() {
         }
     }, [data])
     console.log(data)
+
 
     const [addTeacher] = useMutation(addTeacherql)
     const addCourse = async () => {
