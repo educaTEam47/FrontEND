@@ -5,6 +5,7 @@ import { getUserql } from '../queries/queries'
 import Swal from 'sweetalert2'
 import { useMutation, useQuery } from '@apollo/client'
 import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import Cookies from "universal-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function UpdateUser() {
@@ -15,22 +16,26 @@ function UpdateUser() {
     const [numIdentificacion, setnumIdentificacion] = useState('')
     const [Carrera, setCarrera] = useState('')
     const [email, setemail] = useState('')
+    const cookies = new Cookies();
+    const emailCookie = cookies.get('edit-User')
     let token = localStorage.getItem('token')
     const { data } = useQuery(getUserql,
         {
             variables: { email }
         });
     useEffect(() => {
-        if (email !== '' || email) {
-            if (data) {
-                if (data.getUser) {
-                    if (data.getUser.user) {
-                        setnombres(data.getUser.user.nombres)
-                        setapellidos(data.getUser.user.apellidos)
-                        setidentificacion(data.getUser.user.identificacion)
-                        setnumIdentificacion(data.getUser.user.numIdentificacion)
-                        setCarrera(data.getUser.user.Carrera)
-                        setemail(data.getUser.user.email)
+        if (emailCookie !== "" || emailCookie) {
+            setemail(emailCookie)
+            if (email !== '' || email) {
+                if (data) {
+                    if (data.getUser) {
+                        if (data.getUser.user) {
+                            setnombres(data.getUser.user.nombres)
+                            setapellidos(data.getUser.user.apellidos)
+                            setidentificacion(data.getUser.user.identificacion)
+                            setnumIdentificacion(data.getUser.user.numIdentificacion)
+                            setCarrera(data.getUser.user.Carrera)
+                        }
                     }
                 }
             }
@@ -43,23 +48,23 @@ function UpdateUser() {
     const enviar = async (e) => {
         const response = await updateForm(
             {
-                variables: { email, nombres, apellidos, identificacion, numIdentificacion, Carrera},
+                variables: { email, nombres, apellidos, identificacion, numIdentificacion, Carrera },
                 errorPolicy: "all"
             })
         //console.log(response)
-        if(response){
-            if(response.data.updateUser.error){
-                let error=response.data.updateUser.error
-                let message=error.map(p=> p.message)
+        if (response) {
+            if (response.data.updateUser.error) {
+                let error = response.data.updateUser.error
+                let message = error.map(p => p.message)
                 Swal.fire({
                     icon: 'warning',
                     title: 'Advertencia',
-                    text: message+" todos los demas datos si se actualizaron",
+                    text: message + " todos los demas datos si se actualizaron",
                     showConfirmButton: false,
                     timer: 2500
                 })
             }
-            else{
+            else {
                 Swal.fire({
                     icon: 'success',
                     title: 'Actualizacion',
@@ -69,7 +74,7 @@ function UpdateUser() {
                 })
             }
         }
-        
+
     }
     return (
         <div className="container">
@@ -80,6 +85,7 @@ function UpdateUser() {
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="email user"
+                            value={email}
                             onChange={e => setemail(e.target.value)}
                             aria-label="Id User"
                             aria-describedby="basic-addon1"

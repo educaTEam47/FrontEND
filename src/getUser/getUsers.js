@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from '@apollo/client'
 import Swal from 'sweetalert2'
-import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
+import { validateql, addTeacherql, delTeacherql,updateUserql } from '../mutations/mutation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUsersql } from '../queries/queries'
 import { Button, Table } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
+import Cookies from "universal-cookie";
 import './getUsers.css'
 function GetUsers() {
     const { data } = useQuery(getUsersql)
@@ -67,6 +68,13 @@ function GetUsers() {
     }
 
 
+    const editar = (emailUser) =>{
+        const cookies = new Cookies();
+        cookies.set('edit-User', emailUser, { maxAge: 10 * 60 }, { path: '/' })
+        window.location.replace('./updateUser')
+    }
+
+
     return (
         <div className="container">
             <Table striped bordered hover variant="dark" className="text-center">
@@ -91,7 +99,7 @@ function GetUsers() {
                                 <td>{val.rol}</td>
                                 <td>
                                     <Button className="Observar" onClick={()=>observar(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Editar" ><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                    <Button className="Editar" onClick={()=>editar(val.email)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
                                     <Button className="Eliminar" ><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                             </tr>
