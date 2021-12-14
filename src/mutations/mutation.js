@@ -77,6 +77,7 @@ mutation newProject($tittle:String!,$description:String!,$Horas:String!){
     Horas:$Horas
   }){
     Project{
+      _id
       tittle
       description
     }

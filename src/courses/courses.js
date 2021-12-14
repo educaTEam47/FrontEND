@@ -1,24 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { createProjectql } from '../mutations/mutation'
+import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
 import { useMutation } from '@apollo/client'
 
-function Course(){
-    const [description,setDescription] = useState('')
+function Course() {
+
+    const [description, setDescription] = useState('')
     const [tittle, setTittle] = useState('')
     const [Horas, setHoras] = useState('')
-    const [ProyectForm] =useMutation(createProjectql)
-    const enviar= async (e)=>{
+    const [ProyectForm] = useMutation(createProjectql)
+    const [idProject,setidProject]= useState("")
+    const [email, setEmail] = useState("")
+
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if (!tokenStorage) {
+            tokenStorage = ""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
+    const [validateForm] = useMutation(validateql)
+    const [addTeacher] = useMutation(addTeacherql)
+    const response = async () => {
+        const response1 = await validateForm(
+            {
+                variables: { token: tokenStorage }
+            }
+        )
+        console.log(response1)
+        if (response1) {
+            if (response1.data.validate.error) {
+                let message = response1.data.validate.error.map(p => p.message)
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "warning"
+                })
+                window.location.replace('./')
+            }
+            else {
+                if (response1.data.validate.rol === "Lider") {
+                    setEmail(response1.data.validate.email)
+                    setAuth(response1.data.validate.validacion)
+                }
+                else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tiene acceso permitido",
+                        icon: "error"
+                    })
+                    window.location.replace('./')
+                }
+            }
+        }
+    }
+    //################################################################################################################
+
+
+    const enviar = async (e) => {
         const response = await ProyectForm(
             {
-                variables:{description,tittle,Horas}
+                variables: { description, tittle, Horas }
             }
         )
         console.log(response)
-        if(response.data.createProject.error){
+        if (response.data.createProject.error) {
             let error = response.data.createProject.error
-            let message = error.map (p => p.message)
+            let message = error.map(p => p.message)
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -27,17 +80,22 @@ function Course(){
                 timer: 1500
             })
         }
-        else{
+        else {
+            setidProject(response.data.createProject.Project._id)
+            const response1 = await addTeacher({
+                variables:{email,idProject }
+            })
+            console.log(response1)
             Swal.fire({
                 icon: 'success',
                 title: 'Curso Creado',
-                text: 'El curso '+response.data.createProject.Project.tittle+ " se ha creado",
+                text: 'El curso ' + response.data.createProject.Project.tittle + " se ha creado",
                 showConfirmButton: false,
                 timer: 2500
             })
         }
     }
-    return(
+    return (
         <div className="container">
             <Card className="text-center" style={{ width: '18rem' }}>
                 <Card.Body className="card-body">
