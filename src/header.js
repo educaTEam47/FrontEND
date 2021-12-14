@@ -68,6 +68,7 @@ function Header() {
                     <Nav className="me-auto">
                         {!isLogged && <Nav.Link href="/login">Inicia</Nav.Link>}
                         {teacher && <Nav.Link href="/courseteacher">Mis cursos</Nav.Link>}
+                        {teacher && <Nav.Link href="/createCourse">Curso Nuevo</Nav.Link>}
                         {admin && <Nav.Link href="/allUsers">Todos los usuarios</Nav.Link>}
                         {admin && <Nav.Link href="/getProjectsAdmi">Todos los Proyectos</Nav.Link>}
                         {(admin || teacher) && <Nav.Link href="/user">Busca un usuario</Nav.Link>}
