@@ -3,6 +3,8 @@ import Swal from 'sweetalert2'
 import { validateql, addTeacherql, delTeacherql } from './mutations/mutation'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button, Navbar, Nav, NavItem, NavDropdown, MenuItem, Container } from 'react-bootstrap';
+import logoBuho from './logo_mamaloncito.png';
+import './header.css'
 function Header() {
 
     //----------------------------------------------------------------------------------------------------------------
@@ -40,7 +42,8 @@ function Header() {
                 }
                 else if (response1.data.validate.rol === "Estudiante") {
                     setStudent(true);
-                } else if (response1.data.validate.rol === "Admi") {
+                }
+                else if (response1.data.validate.rol === "Admi") {
                     setAdmin(true);
                 }
             }
@@ -54,11 +57,12 @@ function Header() {
     }
     console.log(name);
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar className="Header" bg="light" expand="lg">
             <Container>
+                <Navbar.Brand><img src={logoBuho} className="logo"></img></Navbar.Brand>
                 {!isLogged && <Navbar.Brand href="/">EducaTEam</Navbar.Brand>}
                 {isLogged && <Navbar.Brand href="/profile">EducaTEam</Navbar.Brand>}
-                {isLogged && <Navbar.Text>Bienvenid@ {name}</Navbar.Text>}
+                {isLogged && <Navbar.Text className="Bienvenida">Bienvenid@ {name}</Navbar.Text>}
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
@@ -68,7 +72,6 @@ function Header() {
                         {admin && <Nav.Link href="/getProjectsAdmi">Todos los Proyectos</Nav.Link>}
                         {(admin || teacher) && <Nav.Link href="/user">Busca un usuario</Nav.Link>}
                         {!isLogged && <Nav.Link href="/register">Registrate</Nav.Link>}
-
                     </Nav>
                 </Navbar.Collapse>
             </Container>
