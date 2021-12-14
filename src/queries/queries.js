@@ -12,8 +12,8 @@ export const getUsersql = gql`
     }
     `
 export const getUserql = gql`
-query user($id:ID!){
-    getUser(id:$id){
+query user($email:String!){
+    getUser(email:$email){
         user{
             _id
             nombres
