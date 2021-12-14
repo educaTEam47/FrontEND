@@ -70,8 +70,8 @@ mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identifi
 }
 `
 export const createProjectql = gql`
-mutation newProject($tittle:String!,$description:String!,$Horas:String!){
-  createProject(input:{
+mutation newProject($tittle:String!,$description:String!,$Horas:String!,$email:String!){
+  createProject(email:$email,input:{
     tittle:$tittle
     description:$description
     Horas:$Horas
@@ -164,6 +164,7 @@ mutation validateToken($token:String!){
     email
     rol
     validacion
+    Estado
     error{
       path
       message

@@ -10,8 +10,9 @@ function Course() {
     const [tittle, setTittle] = useState('')
     const [Horas, setHoras] = useState('')
     const [ProyectForm] = useMutation(createProjectql)
-    const [idProject,setidProject]= useState("")
+    const [idProject, setidProject] = useState("")
     const [email, setEmail] = useState("")
+    const [auto, setAuto] = useState("")
 
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
@@ -45,6 +46,7 @@ function Course() {
             }
             else {
                 if (response1.data.validate.rol === "Lider") {
+                    setAuto(response1.data.validate.Estado)
                     setEmail(response1.data.validate.email)
                     setAuth(response1.data.validate.validacion)
                 }
@@ -63,37 +65,42 @@ function Course() {
 
 
     const enviar = async (e) => {
-        const response = await ProyectForm(
-            {
-                variables: { description, tittle, Horas }
+        if (auto === "Activar") {
+            const response = await ProyectForm(
+                {
+                    variables: { email,description, tittle, Horas }
+                }
+            )
+            console.log(response)
+            if (response.data.createProject.error) {
+                let error = response.data.createProject.error
+                let message = error.map(p => p.message)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             }
-        )
-        console.log(response)
-        if (response.data.createProject.error) {
-            let error = response.data.createProject.error
-            let message = error.map(p => p.message)
+            else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Curso Creado',
+                    text: 'El curso ' + response.data.createProject.Project.tittle + " se ha creado",
+                    showConfirmButton: false,
+                    timer: 2500
+                })
+            }
+        }
+        else{
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: message,
-                showConfirmButton: false,
-                timer: 1500
+                title:"Error!",
+                text:"No tiene autorizacion",
+                icon:"error"
             })
         }
-        else {
-            setidProject(response.data.createProject.Project._id)
-            const response1 = await addTeacher({
-                variables:{email,idProject }
-            })
-            console.log(response1)
-            Swal.fire({
-                icon: 'success',
-                title: 'Curso Creado',
-                text: 'El curso ' + response.data.createProject.Project.tittle + " se ha creado",
-                showConfirmButton: false,
-                timer: 2500
-            })
-        }
+
     }
     return (
         <div className="container">

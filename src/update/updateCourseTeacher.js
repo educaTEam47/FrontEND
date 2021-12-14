@@ -100,34 +100,29 @@ function EditProjectTeacher() {
     const delStudent = async (newId) => {
         console.log(newId)
         if (newId) {
-            if (newId.length !== 24) {
-                Swal.fire("El ID introducido no es valido")
-            }
-            else {
-                Swal.fire({
-                    title: '¿Esta seguro?',
-                    text: "El estudiante sera eliminado con todos sus datos del curso",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, quiero eliminar'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        const response = await delStudentForm(
-                            {
-                                variables: { idProject: id, idStudent: newId }
-                            }
-                        )
-                        Swal.fire(
-                            'Eliminado!',
-                            'El estudiante ha sido eliminado',
-                            'success'
-                        )
-                        window.location.replace('./editProjectTeacher')
-                    }
-                })
-            }
+            Swal.fire({
+                title: '¿Esta seguro?',
+                text: "El estudiante sera eliminado con todos sus datos del curso",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, quiero eliminar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await delStudentForm(
+                        {
+                            variables: { idProject: id, email: newId }
+                        }
+                    )
+                    Swal.fire(
+                        'Eliminado!',
+                        'El estudiante ha sido eliminado',
+                        'success'
+                    )
+                    window.location.replace('./editProjectTeacher')
+                }
+            })
         }
     }
 
@@ -145,36 +140,27 @@ function EditProjectTeacher() {
             }
         })
         if (newId) {
-            if (newId.length !== 24) {
+            const response = await addStudentForm(
+                {
+                    variables: { idProject: id, email: newId }
+                }
+            )
+            if (response.data.addStudent.error) {
+                let error = response.data.addStudent.error
+                let message = error.map(p => p.message)
                 Swal.fire({
                     icon: 'error',
                     title: "Error",
-                    text: "Debe ingresar un ID valido"
+                    text: message
                 })
             }
             else {
-                const response = await addStudentForm(
-                    {
-                        variables: { idProject: id, idStudent: newId }
-                    }
-                )
-                if (response.data.addStudent.error) {
-                    let error = response.data.addStudent.error
-                    let message = error.map(p => p.message)
-                    Swal.fire({
-                        icon: 'error',
-                        title: "Error",
-                        text: message
-                    })
-                }
-                else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: "Agregado Exitosamente",
-                        text: "El estudiante ha sido agregado"
-                    })
-                    window.location.replace('./editProjectTeacher')
-                }
+                Swal.fire({
+                    icon: 'success',
+                    title: "Agregado Exitosamente",
+                    text: "El estudiante ha sido agregado"
+                })
+                window.location.replace('./editProjectTeacher')
             }
         }
     }
@@ -277,7 +263,7 @@ function EditProjectTeacher() {
                                 <td>{val.rol}</td>
                                 <td>
                                     <Button className="Observar" onClick={() => ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Eliminar" onClick={() => delStudent(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
+                                    <Button className="Eliminar" onClick={() => delStudent(val.email)}><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                                 <td></td>
                             </tr>
