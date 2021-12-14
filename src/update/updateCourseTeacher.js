@@ -12,11 +12,11 @@ import Cookies from "universal-cookie";
 import '../courses/courseAdmi.css'
 
 function EditProjectTeacher() {
-    
+
     const cookies = new Cookies();
     const id = cookies.get('edit-Course')
-    
-    
+
+
     //console.log(id)
     const [idTeacher, setId] = useState("")
     const { data } = useQuery(getCourseql, {
@@ -25,8 +25,8 @@ function EditProjectTeacher() {
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
     useEffect(() => {
-        if(!tokenStorage){
-            tokenStorage=""
+        if (!tokenStorage) {
+            tokenStorage = ""
         }
     }, [])
     const [auth, setAuth] = useState(false)
@@ -37,7 +37,7 @@ function EditProjectTeacher() {
     const response = async () => {
         const response1 = await validateForm(
             {
-                variables: { token:tokenStorage }
+                variables: { token: tokenStorage }
             }
         )
         console.log(response1)
@@ -74,7 +74,7 @@ function EditProjectTeacher() {
     const [Horas, setHoras] = useState('')
     const [people, setPeople] = useState([])
     useEffect(() => {
-        if (auth===true) {
+        if (auth === true) {
             if (data) {
                 if (data.getProject) {
                     setTitle(data.getProject.tittle)
