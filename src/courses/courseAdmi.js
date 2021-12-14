@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
+import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
 import { getProjects } from '../queries/queries'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import Cookies from "universal-cookie";
 import './courseAdmi.css'
 
@@ -13,6 +14,52 @@ function GetCoursesAdmi() {
     const [tittle, settittle] = useState('')
     const { data } = useQuery(getProjects)
     const [show, setShow] = useState(true);
+
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if (!tokenStorage) {
+            tokenStorage = ""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
+    const [validateForm] = useMutation(validateql)
+    const response = async () => {
+        const response1 = await validateForm(
+            {
+                variables: { token: tokenStorage }
+            }
+        )
+        console.log(response1)
+        if (response1) {
+            if (response1.data.validate.error) {
+                let message = response1.data.validate.error.map(p => p.message)
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "warning"
+                })
+                window.location.replace('./')
+            }
+            else {
+                if (response1.data.validate.rol === "Admi") {
+                    setAuth(response1.data.validate.validacion)
+                }
+                else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tiene acceso permitido",
+                        icon: "error"
+                    })
+                    window.location.replace('./')
+                }
+            }
+        }
+    }
+    //################################################################################################################
 
     const observar = async (idProject) => {
         let filtro = data.getProjects.filter(p => p._id == idProject)

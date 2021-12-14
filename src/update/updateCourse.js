@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from 'react'
-import { updateProjectql, delTeacherql, addTeacherql, addStudentql, delStudentql } from '../mutations/mutation';
+import { updateProjectql, delTeacherql, addTeacherql, addStudentql, delStudentql, validateql } from '../mutations/mutation';
 import { getCourseql } from '../queries/queries'
 import Swal from 'sweetalert2'
 import { useMutation, useQuery } from '@apollo/client'
@@ -21,23 +21,71 @@ function UpdateCourse() {
     const [people, setpeople] = useState([])
     const cookies = new Cookies();
     const id = cookies.get('edit-Course')
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if (!tokenStorage) {
+            tokenStorage = ""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
+    const [validateForm] = useMutation(validateql)
+    const response = async () => {
+        const response1 = await validateForm(
+            {
+                variables: { token: tokenStorage }
+            }
+        )
+        console.log(response1)
+        if (response1) {
+            if (response1.data.validate.error) {
+                let message = response1.data.validate.error.map(p => p.message)
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "warning"
+                })
+                window.location.replace('./')
+            }
+            else {
+                if (response1.data.validate.rol === "Admi") {
+                    setAuth(response1.data.validate.validacion)
+                }
+                else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tiene acceso permitido",
+                        icon: "error"
+                    })
+                    window.location.replace('./')
+                }
+            }
+        }
+    }
+    //################################################################################################################
     //console.log(id)
     const { data } = useQuery(getCourseql,
         {
             variables: { id }
         });
     useEffect(() => {
-        if (id) {
-            if (data) {
-                if (data.getProject) {
-                    settittle(data.getProject.tittle)
-                    setdescription(data.getProject.description)
-                    setHoras(data.getProject.Horas)
-                    setlider(data.getProject.lider)
-                    setpeople(data.getProject.people)
+        if (auth === true) {
+            if (id) {
+                if (data) {
+                    if (data.getProject) {
+                        settittle(data.getProject.tittle)
+                        setdescription(data.getProject.description)
+                        setHoras(data.getProject.Horas)
+                        setlider(data.getProject.lider)
+                        setpeople(data.getProject.people)
+                    }
                 }
             }
         }
+
     }, [data])
 
     const [updateForm] = useMutation(updateProjectql)
@@ -261,7 +309,7 @@ function UpdateCourse() {
             }
         }
     }
-    const delTeacher = (newId) =>{
+    const delTeacher = (newId) => {
         if (newId) {
             if (newId.length !== 24) {
                 Swal.fire("El ID introducido no es valido")
@@ -279,7 +327,7 @@ function UpdateCourse() {
                     if (result.isConfirmed) {
                         const response = await delForm(
                             {
-                                variables: { idTeacher:newId, idCourse: id }
+                                variables: { idTeacher: newId, idCourse: id }
                             }
                         )
                         Swal.fire(
@@ -293,21 +341,21 @@ function UpdateCourse() {
             }
         }
     }
-    const ObserStudent = (idStudent) =>{
-        let filtro = data.getProject.people.filter(p => p._id==idStudent)
-        let nombre=filtro[0].nombres +" "+ filtro[0].apellidos
+    const ObserStudent = (idStudent) => {
+        let filtro = data.getProject.people.filter(p => p._id == idStudent)
+        let nombre = filtro[0].nombres + " " + filtro[0].apellidos
         Swal.fire({
-            title:nombre,
-            text:filtro[0].rol,
-            icon:'info'
+            title: nombre,
+            text: filtro[0].rol,
+            icon: 'info'
         })
     }
-    const ObserTeacher = (idTeacher) =>{
-        let filtro = data.getProject.lider.filter(p => p._id==idTeacher)
+    const ObserTeacher = (idTeacher) => {
+        let filtro = data.getProject.lider.filter(p => p._id == idTeacher)
         Swal.fire({
-            title:filtro[0].nombres +" "+ filtro[0].apellidos,
-            text:filtro[0].rol,
-            icon:'info'
+            title: filtro[0].nombres + " " + filtro[0].apellidos,
+            text: filtro[0].rol,
+            icon: 'info'
         })
     }
     return (
@@ -378,9 +426,9 @@ function UpdateCourse() {
                                 <td>{val.email}</td>
                                 <td>{val.rol}</td>
                                 <td>
-                                    <Button className="Observar" onClick={()=>ObserTeacher(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Observar" onClick={() => ObserTeacher(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
                                     <Button className="Reemplazar" onClick={() => reemplazar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
-                                    <Button className="Eliminar" onClick={()=> delTeacher(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
+                                    <Button className="Eliminar" onClick={() => delTeacher(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                                 <td></td>
                             </tr>
@@ -411,8 +459,8 @@ function UpdateCourse() {
                                 <td>{val.email}</td>
                                 <td>{val.rol}</td>
                                 <td>
-                                    <Button className="Observar" onClick={()=>ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
-                                    <Button className="Eliminar" onClick={()=>delStudent(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
+                                    <Button className="Observar" onClick={() => ObserStudent(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Eliminar" onClick={() => delStudent(val._id)}><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                                 <td></td>
                             </tr>
