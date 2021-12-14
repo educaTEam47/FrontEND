@@ -43,6 +43,7 @@ function CourseTeacher() {
                     text: message,
                     icon: "warning"
                 })
+                window.location.replace('./')
             }
             else {
                 if (response1.data.validate.rol === "Lider") {

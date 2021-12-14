@@ -49,6 +49,7 @@ function EditProjectTeacher() {
                     text: message,
                     icon: "warning"
                 })
+                window.location.replace('./')
             }
             else {
                 if (response1.data.validate.rol === "Lider") {
@@ -61,6 +62,7 @@ function EditProjectTeacher() {
                         text: "No tiene acceso permitido",
                         icon: "error"
                     })
+                    window.location.replace('./')
                 }
             }
         }

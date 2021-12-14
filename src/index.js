@@ -7,6 +7,7 @@ import {ApolloClient, createHttpLink, InMemoryCache, ApolloProvider} from '@apol
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter} from "react-router-dom"
 import Login from './login/login'
+import Header from './header';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000',
