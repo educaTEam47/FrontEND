@@ -42,6 +42,7 @@ function Login() {
             })
             let token = response.data.login.token
             localStorage.setItem('token',token)
+            window.location.replace('./profile');
         }
     }
     //let nombresuser = data && data.getUsers.map(p => p.nombres)
