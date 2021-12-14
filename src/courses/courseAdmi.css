@@ -108,3 +108,25 @@
     position: absolute;
     background-color: rgb(38, 38, 60);
 }
+.Ir{
+    background: none;
+    border: none;
+}
+.Ir:hover{
+    background: rgb(63, 71, 97);
+}
+.Ir::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Ir:hover::after{
+    text-align: center;
+    content: "Ir al curso";
+    margin-top: 2%;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}

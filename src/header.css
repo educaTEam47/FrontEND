@@ -6,3 +6,10 @@
     width: 50px;
     height: 60px;
 }
+.Logout{
+    text-decoration: none;
+    color: black;
+}
+.Logout:hover{
+    color:black
+}

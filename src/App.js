@@ -14,6 +14,9 @@ import UpdateCourse from './update/updateCourse';
 import CourseTeacher from './courses/courseTeacher';
 import EditProjectTeacher from './update/updateCourseTeacher';
 import Header from './header';
+import CourseStudent from './courses/courseStudent';
+import InsideCourse from './courses/insideCourse';
+
 function App() {
   return (
     <div className="App">
@@ -32,6 +35,8 @@ function App() {
         <Route path='/editProject' element={<UpdateCourse />} />
         <Route path='/courseteacher' element={<CourseTeacher />} />
         <Route path='/editProjectTeacher' element={<EditProjectTeacher />} />
+        <Route path='/courseStudent' element={<CourseStudent />} />
+        <Route path='/insideCourse' element={<InsideCourse />} />
       </Routes>
     </div>
   );

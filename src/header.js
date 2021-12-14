@@ -30,10 +30,10 @@ function Header() {
                 variables: { token: tokenStorage }
             }
         )
-        console.log(response1)
+        //console.log(response1)
         if (response1)
             if (response1.data.validate.rol !== "") {
-                console.log("Rol: " + response1.data.validate.rol);
+                //console.log("Rol: " + response1.data.validate.rol);
                 setLogs(response1.data.validate.rol);
                 setAuth(response1.data.validate.validacion)
                 setName(response1.data.validate.nombres);
@@ -51,11 +51,15 @@ function Header() {
     //################################################################################################################
 
     var isLogged = false;
-    console.log("Muestra " + logs);
+    //console.log("Muestra " + logs);
     if (!!logs) {
         isLogged = true;
     }
-    console.log(name);
+    //console.log(name);
+    const logout = () =>{
+        localStorage.setItem('token',"")
+        window.location.replace('./')
+    }
     return (
         <Navbar className="Header" bg="light" expand="lg">
             <Container>
@@ -67,12 +71,14 @@ function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {!isLogged && <Nav.Link href="/login">Inicia</Nav.Link>}
+                        {student && <Nav.Link href="/courseStudent">Mis cursos</Nav.Link>}
                         {teacher && <Nav.Link href="/courseteacher">Mis cursos</Nav.Link>}
                         {teacher && <Nav.Link href="/createCourse">Curso Nuevo</Nav.Link>}
                         {admin && <Nav.Link href="/allUsers">Todos los usuarios</Nav.Link>}
                         {admin && <Nav.Link href="/getProjectsAdmi">Todos los Proyectos</Nav.Link>}
                         {(admin || teacher) && <Nav.Link href="/user">Busca un usuario</Nav.Link>}
                         {!isLogged && <Nav.Link href="/register">Registrate</Nav.Link>}
+                        {isLogged && <Nav.Link className="Logout" onClick={logout}>Cerrar Sesion</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
