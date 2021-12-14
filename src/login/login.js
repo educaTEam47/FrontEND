@@ -42,6 +42,7 @@ function Login() {
             })
             let token = response.data.login.token
             localStorage.setItem('token',token)
+            console.log(username, password);
             window.location.replace('./profile');
         }
     }
