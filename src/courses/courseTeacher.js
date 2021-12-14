@@ -55,6 +55,7 @@ function CourseTeacher() {
                         text: "No tiene acceso permitido",
                         icon: "error"
                     })
+                    window.location.replace('./')
                 }
             }
         }
