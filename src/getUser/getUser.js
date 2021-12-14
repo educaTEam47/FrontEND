@@ -11,15 +11,16 @@ function GetUser() {
     const [apellidos, setapellidos] = useState('')
     const [email, setemail] = useState('')
     const [rol, setrol] = useState('')
+    var [Email,setEmail]=useState('');
     const { data, loading } = useQuery(getUserql,
         {
-            variables: { id },
+            variables: { Email },
         });
     //console.log(data)
     const validar = () => {
-        if (id.length == 12 || id.length == 24) {
+        if (!email) {
             if (data) {
-                let error = data.getUser.error
+                let error = data.getUserByEmail.error
                 if(error){
                     let message = error.map(p => p.message)
                     Swal.fire({
@@ -35,15 +36,15 @@ function GetUser() {
                     setrol('')
                 }
                 else{
-                    setnombres(data.getUser.user.nombres)
-                    setapellidos(data.getUser.user.apellidos)
-                    setemail(data.getUser.user.email)
-                    setrol(data.getUser.user.rol)
+                    setnombres(data.getUserByEmail.user.nombres)
+                    setapellidos(data.getUserByEmail.user.apellidos)
+                    setemail(data.getUserByEmail.user.email)
+                    setrol(data.getUserByEmail.user.rol)
                 } 
             }
         }
         else {
-            let message="El id del usuario debe contener 24 digitos, el id ingresado contiene "+id.length+" digitos"
+            let message="El email del usuario no puede estar vacio / Usuario no existe"
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -65,8 +66,8 @@ function GetUser() {
                     <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
                     <InputGroup className="mb-3">
                         <FormControl
-                            placeholder="Id del Usuario"
-                            onChange={e => setid(e.target.value)}
+                            placeholder="Correo Del Usuario"
+                            onChange={e => setEmail(e.target.value)}
                             aria-label="Username"
                             aria-describedby="basic-addon1"
                         />
