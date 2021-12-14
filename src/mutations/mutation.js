@@ -42,7 +42,7 @@ mutation register($nombres:String!, $apellidos:String!, $username:String!,$email
   }
 `
 export const updateUserql = gql`
-mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identificacion:String,$numIdentificacion:String,$Carrera:String){
+mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identificacion:String,$numIdentificacion:String,$Carrera:String,$Estado:String){
   updateUser(email:$email,input:{
     nombres:$nombres
     apellidos:$apellidos
@@ -50,6 +50,7 @@ mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identifi
     numIdentificacion:$numIdentificacion
     Carrera:$Carrera
     email:$email
+    Estado:$Estado
   }) {
     update
     user{

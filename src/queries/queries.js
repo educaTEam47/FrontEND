@@ -8,6 +8,7 @@ export const getUsersql = gql`
         apellidos
         email
         rol
+        Estado
         }
     }
     `
@@ -23,6 +24,7 @@ query user($email:String!){
             identificacion
             numIdentificacion
             Carrera
+            Estado
             cursos{
               _id
               tittle
