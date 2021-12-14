@@ -14,13 +14,13 @@ function GetUser() {
     var [Email,setEmail]=useState('');
     const { data, loading } = useQuery(getUserql,
         {
-            variables: { Email },
+            variables: { email:Email },
         });
     //console.log(data)
     const validar = () => {
         if (!email) {
             if (data) {
-                let error = data.getUserByEmail.error
+                let error = data.getUser.error
                 if(error){
                     let message = error.map(p => p.message)
                     Swal.fire({
@@ -36,10 +36,10 @@ function GetUser() {
                     setrol('')
                 }
                 else{
-                    setnombres(data.getUserByEmail.user.nombres)
-                    setapellidos(data.getUserByEmail.user.apellidos)
-                    setemail(data.getUserByEmail.user.email)
-                    setrol(data.getUserByEmail.user.rol)
+                    setnombres(data.getUser.user.nombres)
+                    setapellidos(data.getUser.user.apellidos)
+                    setemail(data.getUser.user.email)
+                    setrol(data.getUser.user.rol)
                 } 
             }
         }
