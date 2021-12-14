@@ -13,17 +13,30 @@ import jwt from 'jsonwebtoken'
 
 function CourseTeacher() {
     let token = localStorage.getItem('token')
-    console.log(token)
+    //console.log(token)
     useEffect(() => {
         response()
     }, [])
-    const [id, setId] = useState("")
+    const [id, setId] = useState(null)
     const [cursos, setCursos] = useState([])
+
+
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if (!tokenStorage) {
+            tokenStorage = ""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
     const [validateForm] = useMutation(validateql)
     const response = async () => {
         const response1 = await validateForm(
             {
-                variables: { token }
+                variables: { token: tokenStorage }
             }
         )
         console.log(response1)
@@ -37,13 +50,9 @@ function CourseTeacher() {
                 })
             }
             else {
-                if (response1.data.validate.rol == "Lider") {
-                    Swal.fire({
-                        title: "Bienvenido",
-                        text: response1.data.validate.rol + " " + response1.data.validate.nombres,
-                        icon: "success"
-                    })
+                if (response1.data.validate.rol === "Lider") {
                     setId(response1.data.validate.id)
+                    setAuth(response1.data.validate.validacion)
                 }
                 else {
                     Swal.fire({
@@ -55,15 +64,20 @@ function CourseTeacher() {
             }
         }
     }
+    //################################################################################################################
+
+
     const { data } = useQuery(getUserql,
         {
             variables: { id }
         })
     useEffect(() => {
-        if (id) {
-            if (data) {
-                if (data.getUser) {
-                    setCursos(data.getUser.user.cursos)
+        if (auth === true) {
+            if (id) {
+                if (data) {
+                    if (data.getUser) {
+                        setCursos(data.getUser.user.cursos)
+                    }
                 }
             }
         }
@@ -116,7 +130,7 @@ function CourseTeacher() {
         }
     }
 
-    const envio = (idProject) =>{
+    const envio = (idProject) => {
         const cookies = new Cookies();
         cookies.set('edit-Course', idProject, { maxAge: 10 * 60 }, { path: '/' })
         window.location.replace('./editProjectTeacher')
@@ -136,7 +150,7 @@ function CourseTeacher() {
                 <tbody>
                     {cursos.map((val, key) => {
                         return (
-                            <tr onClick={()=>envio(val._id)}>
+                            <tr onClick={() => envio(val._id)}>
                                 <td>{key + 1}</td>
                                 <td>{val.tittle}</td>
                                 <td>{val.description}</td>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from 'react'
-import { updateProjectql, delTeacherql, addTeacherql, addStudentql, delStudentql } from '../mutations/mutation';
+import { updateProjectql, delTeacherql, validateql, addStudentql, delStudentql } from '../mutations/mutation';
 import { getCourseql } from '../queries/queries'
 import Swal from 'sweetalert2'
 import { useMutation, useQuery } from '@apollo/client'
@@ -12,37 +12,85 @@ import Cookies from "universal-cookie";
 import '../courses/courseAdmi.css'
 
 function EditProjectTeacher() {
+    
     const cookies = new Cookies();
     const id = cookies.get('edit-Course')
-    console.log(id)
-
+    
+    
+    //console.log(id)
+    const [idTeacher, setId] = useState("")
     const { data } = useQuery(getCourseql, {
         variables: { id }
     })
-    //console.log(data)
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if(!tokenStorage){
+            tokenStorage=""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
+    const [validateForm] = useMutation(validateql)
+    const response = async () => {
+        const response1 = await validateForm(
+            {
+                variables: { token:tokenStorage }
+            }
+        )
+        console.log(response1)
+        if (response1) {
+            if (response1.data.validate.error) {
+                let message = response1.data.validate.error.map(p => p.message)
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "warning"
+                })
+            }
+            else {
+                if (response1.data.validate.rol === "Lider") {
+                    setId(response1.data.validate.id)
+                    setAuth(response1.data.validate.validacion)
+                }
+                else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tiene acceso permitido",
+                        icon: "error"
+                    })
+                }
+            }
+        }
+    }
+    //################################################################################################################
+
     const [tittle, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [Horas, setHoras] = useState('')
     const [people, setPeople] = useState([])
     useEffect(() => {
-        if (data) {
-            if (data.getProject) {
-                setTitle(data.getProject.tittle)
-                setDescription(data.getProject.description)
-                setHoras(data.getProject.Horas)
-                setPeople(data.getProject.people)
+        if (auth===true) {
+            if (data) {
+                if (data.getProject) {
+                    setTitle(data.getProject.tittle)
+                    setDescription(data.getProject.description)
+                    setHoras(data.getProject.Horas)
+                    setPeople(data.getProject.people)
+                }
             }
         }
-
     }, [data])
     //console.log(data)
-    const ObserStudent = (idStudent) =>{
-        let filtro = data.getProject.people.filter(p => p._id==idStudent)
-        let nombre=filtro[0].nombres +" "+ filtro[0].apellidos
+    const ObserStudent = (idStudent) => {
+        let filtro = data.getProject.people.filter(p => p._id == idStudent)
+        let nombre = filtro[0].nombres + " " + filtro[0].apellidos
         Swal.fire({
-            title:nombre,
-            text:filtro[0].rol,
-            icon:'info'
+            title: nombre,
+            text: filtro[0].rol,
+            icon: 'info'
         })
     }
 
@@ -217,7 +265,7 @@ function EditProjectTeacher() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data && data.getProject.people.map((val, key) => {
+                    {people.map((val, key) => {
                         return (
                             <tr>
                                 <td>{key + 1}</td>
