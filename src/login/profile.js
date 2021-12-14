@@ -91,9 +91,9 @@ function Profile() {
     return (
         <div className="container">
             <Card className="text-center">
-                <Card.Header>Bienvenido Usuario</Card.Header>
+                <Card.Header></Card.Header>
                 <Card.Body>
-                    <Card.Title>Bienvenidos a EducaTEam</Card.Title>
+                    <Card.Title>Bienvenid@ {name}</Card.Title>
                     <Card.Text>
                         Pagina PlaceHolder para login Exitoso
                     </Card.Text>
