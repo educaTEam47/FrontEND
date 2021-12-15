@@ -73,4 +73,22 @@ query getCourse($id:ID!){
   }
 }
 `
+export const getNoteql =gql` 
+query GetNote($idProject:ID!){
+  getNote(idProject:$idProject){
+    notes{
+      note
+      project{
+        tittle
+      }
+      teacher{
+        nombres
+        email
+      }
+      _id
+    }
+    search
+  }
+}
+`
 

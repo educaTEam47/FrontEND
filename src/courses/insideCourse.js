@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
+import { Card, InputGroup, FormControl, Button, DropdownButton, Row, Col, Navbar } from 'react-bootstrap';
 import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
-import { AiFillEdit, AiOutlineUserAdd,AiFillEye } from 'react-icons/ai'
+import { AiFillEdit, AiOutlineUserAdd, AiFillEye } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
-import {getUserql} from '../queries/queries'
+import { getUserql, getNoteql } from '../queries/queries'
 import Cookies from "universal-cookie";
-import { useMutation , useQuery} from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 
-function InsideCourse (){
+function InsideCourse() {
     const [email, setEmail] = useState("")
     const [auto, setAuto] = useState("")
+    const [tittle, setTittle] = useState("")
+    const [notes, setNotes] = useState([])
     const cookies = new Cookies();
-    let idProject=cookies.get('obs-course')
-    console.log(idProject)
+    let idProject = cookies.get('obs-course')
+    //console.log(idProject)
 
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
@@ -66,9 +68,37 @@ function InsideCourse (){
     }
     //################################################################################################################
 
-    return(
+    const { data } = useQuery(getNoteql, {
+        variables: { idProject }
+    })
+    console.log(data)
+    useEffect(() => {
+        if (data) {
+            if (data.getNote.notes) {
+                setNotes(data.getNote.notes)
+            }
+        }
+    }, [data])
+    console.log(notes)
+    return (
         <div className="container">
-
+            <Navbar className="justify-content-center">
+                <Navbar.Brand>{tittle}</Navbar.Brand>
+            </Navbar>
+            <Row xs={1} md={3} className="g-20">
+                {notes.map((val, key) => {
+                    return (
+                        <Col>
+                            <Card className="text-center" style={{ width: '23rem' }}>
+                                <Card.Body className="card-body">
+                                    <Card.Title className="tittle">{val.note}</Card.Title>
+                                    <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    )
+                })}
+            </Row>
         </div>
     )
 }
