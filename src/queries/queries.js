@@ -78,6 +78,7 @@ query GetNote($idProject:ID!){
   getNote(idProject:$idProject){
     notes{
       note
+      description
       project{
         tittle
       }

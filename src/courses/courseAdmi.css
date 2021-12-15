@@ -130,3 +130,26 @@
     position: absolute;
     background-color: rgb(38, 38, 60);
 }
+
+.Responder{
+    background: none;
+    border: none;
+}
+.Responder:hover{
+    background: rgb(63, 71, 97);
+}
+.Responder::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Responder:hover::after{
+    text-align: center;
+    content: "Responder";
+    margin-top: 2%;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
