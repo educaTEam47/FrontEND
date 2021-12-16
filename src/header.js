@@ -4,9 +4,10 @@ import { validateql, addTeacherql, delTeacherql } from './mutations/mutation'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button, Navbar, Nav, NavItem, NavDropdown, MenuItem, Container } from 'react-bootstrap';
 import logoBuho from './logo_mamaloncito.png';
+import Cookies from "universal-cookie";
 import './header.css'
 function Header() {
-
+    const cookies = new Cookies();
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
     useEffect(() => {
@@ -19,6 +20,7 @@ function Header() {
     const [student, setStudent] = useState(false);
     const [admin, setAdmin] = useState(false);
     const [name, setName] = useState("");
+    const [email, setEmail] = useState("")
     var [logs, setLogs] = useState("");
     useEffect(() => {
         response()
@@ -37,6 +39,7 @@ function Header() {
                 setLogs(response1.data.validate.rol);
                 setAuth(response1.data.validate.validacion)
                 setName(response1.data.validate.nombres);
+                setEmail(response1.data.validate.email)
                 if (response1.data.validate.rol === "Lider") {
                     setTeacher(true);
                 }
@@ -56,10 +59,20 @@ function Header() {
         isLogged = true;
     }
     //console.log(name);
-    const logout = () =>{
-        localStorage.setItem('token',"")
+    const logout = () => {
+        localStorage.setItem('token', "")
+        cookies.remove("edit-User")
+        cookies.remove("obs-course")
+        cookies.remove("id-note")
         window.location.replace('./')
     }
+
+    const updateDatos = () => {
+        const cookies = new Cookies();
+        cookies.set('edit-User', email, { maxAge: 10 * 60 }, { path: '/' })
+        window.location.replace('./updateUser')
+    }
+
     return (
         <Navbar className="Header" bg="light" expand="lg">
             <Container>
@@ -76,7 +89,7 @@ function Header() {
                         {teacher && <Nav.Link href="/createCourse">Curso Nuevo</Nav.Link>}
                         {admin && <Nav.Link href="/allUsers">Todos los usuarios</Nav.Link>}
                         {admin && <Nav.Link href="/getProjectsAdmi">Todos los Proyectos</Nav.Link>}
-                        {isLogged && <Nav.Link href="/updateUser">Actualiza tus datos</Nav.Link>}
+                        {isLogged && <Nav.Link onClick={updateDatos}>Actualiza tus datos</Nav.Link>}
                         {(admin || teacher) && <Nav.Link href="/user">Busca un usuario</Nav.Link>}
                         {!isLogged && <Nav.Link href="/register">Registrate</Nav.Link>}
                         {isLogged && <Nav.Link className="Logout" onClick={logout}>Cerrar Sesion</Nav.Link>}

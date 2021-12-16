@@ -49,7 +49,6 @@ mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identifi
     identificacion:$identificacion
     numIdentificacion:$numIdentificacion
     Carrera:$Carrera
-    email:$email
     Estado:$Estado
   }) {
     update
@@ -186,6 +185,76 @@ export const addResponseql = gql `
     }
     add
     response
+  }
+}
+`
+export const addNoteql =gql` 
+mutation addNote($email:String!, $idProject:ID!,$project:String,$teacher:String
+									$student:String,$note:String,$calificacion:String,$description:String){
+  addNote(email:$email,idProject:$idProject,,input:{
+    project:$project
+    teacher:$teacher
+    student:$student
+    note:$note
+    description:$description
+    calificacion:$calificacion
+  }){
+    notes{
+      _id
+      note
+      description
+      response{
+        teacher
+        student
+        response
+        fecha
+      }
+    }
+    notes{
+      _id
+      project{
+        tittle
+      }
+      teacher{
+        nombres
+        email
+      }
+    }
+    add
+    response
+    calificacion
+    error{
+      path
+      message
+    }
+  }
+}
+`
+export const delNoteql = gql` 
+mutation delNoteql($idNote:ID!){
+  delNote(idNote:$idNote)
+}
+`
+export const delCourse1l =gql ` 
+mutation delCourse($idProject:ID!){
+  delCourse(idProject:$idProject)
+}
+`
+export const updateNote = gql` 
+mutation updateNote($idNote:ID!,$note:String,$description:String){
+  updateNote(idNote:$idNote,input:{
+    note:$note
+    description:$description
+  }){
+    notes{
+      note
+      description
+    }
+    update
+    error{
+      path
+      message
+    }
   }
 }
 `

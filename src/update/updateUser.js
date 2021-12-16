@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from 'react'
-import { updateUserql } from '../mutations/mutation';
+import { updateUserql, validateql } from '../mutations/mutation';
 import { getUserql } from '../queries/queries'
 import Swal from 'sweetalert2'
 import { useMutation, useQuery } from '@apollo/client'
@@ -19,29 +19,79 @@ function UpdateUser() {
     const cookies = new Cookies();
     const emailCookie = cookies.get('edit-User')
     let token = localStorage.getItem('token')
+
+    //----------------------------------------------------------------------------------------------------------------
+    let tokenStorage = localStorage.getItem('token')
+    useEffect(() => {
+        if (!tokenStorage) {
+            tokenStorage = ""
+        }
+    }, [])
+    const [auth, setAuth] = useState(false)
+    useEffect(() => {
+        response()
+    }, [])
+    const [validateForm] = useMutation(validateql)
+    const response = async () => {
+        const response1 = await validateForm(
+            {
+                variables: { token: tokenStorage }
+            }
+        )
+        //console.log(response1)
+        if (response1) {
+            if (response1.data.validate.error) {
+                let message = response1.data.validate.error.map(p => p.message)
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "warning"
+                })
+                window.location.replace('./')
+            }
+            else {
+                if (response1.data.validate.rol === "Lider" || response1.data.validate.rol === "Estudiante" || response1.data.validate.rol === "Admi") {
+                    setAuth(response1.data.validate.validacion)
+                }
+                else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tiene acceso permitido",
+                        icon: "error"
+                    })
+                    window.location.replace('./')
+                }
+            }
+        }
+    }
+    //################################################################################################################
+
+
     const { data } = useQuery(getUserql,
         {
             variables: { email }
         });
     useEffect(() => {
-        if (emailCookie !== "" || emailCookie) {
-            setemail(emailCookie)
-            if (email !== '' || email) {
-                if (data) {
-                    if (data.getUser) {
-                        if (data.getUser.user) {
-                            setnombres(data.getUser.user.nombres)
-                            setapellidos(data.getUser.user.apellidos)
-                            setidentificacion(data.getUser.user.identificacion)
-                            setnumIdentificacion(data.getUser.user.numIdentificacion)
-                            setCarrera(data.getUser.user.Carrera)
+        if (auth === true) {
+            if (emailCookie !== "" || emailCookie) {
+                setemail(emailCookie)
+                if (email !== '' || email) {
+                    if (data) {
+                        if (data.getUser) {
+                            if (data.getUser.user) {
+                                setnombres(data.getUser.user.nombres)
+                                setapellidos(data.getUser.user.apellidos)
+                                setidentificacion(data.getUser.user.identificacion)
+                                setnumIdentificacion(data.getUser.user.numIdentificacion)
+                                setCarrera(data.getUser.user.Carrera)
+                            }
                         }
                     }
                 }
             }
         }
     }, [data])
-
+    console.log(data)
     //console.log(token)
     const [updateForm] = useMutation(updateUserql)
 
@@ -51,7 +101,7 @@ function UpdateUser() {
                 variables: { email, nombres, apellidos, identificacion, numIdentificacion, Carrera },
                 errorPolicy: "all"
             })
-        //console.log(response)
+        console.log(response)
         if (response) {
             if (response.data.updateUser.error) {
                 let error = response.data.updateUser.error
@@ -85,9 +135,8 @@ function UpdateUser() {
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="email user"
-                            value={email}
-                            onChange={e => setemail(e.target.value)}
-                            aria-label="Id User"
+                            disabled value={email}
+                            aria-label="email user"
                             aria-describedby="basic-addon1"
                         />
                     </InputGroup>
@@ -146,7 +195,6 @@ function UpdateUser() {
                     </InputGroup>
                     <Button onClick={enviar}>Actualizar Datos</Button>
                 </Card.Body>
-                {console.log(numIdentificacion)}
             </Card>
         </div>
     )

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
-import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
+import { validateql, addTeacherql, delCourse1l } from '../mutations/mutation'
 import { getUserql } from '../queries/queries'
 import { useQuery, useMutation } from '@apollo/client'
-import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
+import { AiFillEdit, AiOutlineUserAdd, AiFillEye } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
 import Cookies from "universal-cookie";
 import './courseAdmi.css'
@@ -14,7 +14,7 @@ import jwt from 'jsonwebtoken'
 function CourseTeacher() {
     //console.log(token)
     const [id, setId] = useState("")
-    const [email,setEmail] = useState("")
+    const [email, setEmail] = useState("")
     const [cursos, setCursos] = useState([])
 
     //----------------------------------------------------------------------------------------------------------------
@@ -129,10 +129,43 @@ function CourseTeacher() {
         }
     }
 
-    const envio = (idProject) => {
+    const editar = (idProject) => {
         const cookies = new Cookies();
         cookies.set('edit-Course', idProject, { maxAge: 10 * 60 }, { path: '/' })
-        window.location.replace('./editProjectTeacher')
+        window.location.href = './editProjectTeacher'
+    }
+
+    const observar = (idProject) => {
+        const cookies = new Cookies();
+        cookies.set('obs-course', idProject, { maxAge: 10 * 60 }, { path: '/' })
+        window.location.href = './insideCourse'
+    }
+
+    const [delCourseForm] = useMutation(delCourse1l)
+    const delCourse = (idProject) => {
+        Swal.fire({
+            title: '¿Esta seguro?',
+            text: "El curso se eliminara",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, quiero borrar el curso!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await delCourseForm(
+                    {
+                        variables: { idProject }
+                    }
+                )
+                Swal.fire(
+                    'Borrado!',
+                    'El curso ha sido borrada exitosamente.',
+                    'success'
+                )
+                window.location.href = './courseteacher'
+            }
+        })
     }
 
     return (
@@ -144,16 +177,22 @@ function CourseTeacher() {
                         <th>Titulo</th>
                         <th>Descripcion</th>
                         <th>Horas</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {cursos.map((val, key) => {
                         return (
-                            <tr onClick={() => envio(val._id)}>
+                            <tr>
                                 <td>{key + 1}</td>
                                 <td>{val.tittle}</td>
                                 <td>{val.description}</td>
                                 <td>{val.Horas}</td>
+                                <td>
+                                    <Button className="Ir" onClick={() => observar(val._id)}><AiFillEye size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                    <Button className="Editar" onClick={() => editar(val._id)}><AiFillEdit size="2rem" color="rgb(22, 148, 232)" /></Button>
+                                    <Button className="Eliminar" onClick={() => delCourse(val._id)}><FiDelete size="2rem" color="red" /></Button>
+                                </td>
                             </tr>
                         )
                     })}

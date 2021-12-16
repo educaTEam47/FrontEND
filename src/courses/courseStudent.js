@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
+import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Navbar } from 'react-bootstrap';
 import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit, AiOutlineUserAdd, AiFillEye } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
+import { GrAddCircle } from 'react-icons/gr'
 import { getUserql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'
@@ -81,7 +82,7 @@ function CourseStudent() {
         //console.log(idProject)
         const cookies = new Cookies();
         cookies.set('obs-course', idProject, { maxAge: 10 * 60 }, { path: '/' })
-        window.location.replace('./insideCourse')
+        window.location.href = './insideCourse'
     }
 
     return (

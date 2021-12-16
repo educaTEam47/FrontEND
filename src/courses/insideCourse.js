@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, Form, Button, FloatingLabel, Row, Col, Navbar } from 'react-bootstrap';
-import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
+import { delNoteql, validateql, addTeacherql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit, AiOutlineUserAdd, AiFillEye, AiOutlineSend } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
+import { FaBrain } from 'react-icons/fa'
+import { MdDelete } from 'react-icons/md'
+import { IoAddCircle } from 'react-icons/io5'
 import { getUserql, getNoteql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'
@@ -12,9 +15,10 @@ import { useMutation, useQuery } from '@apollo/client'
 function InsideCourse() {
     const [email, setEmail] = useState("")
     const [auto, setAuto] = useState("")
-    const [rol,setRol] =useState("")
+    const [rol, setRol] = useState("")
     const [tittle, setTittle] = useState("")
     const [notes, setNotes] = useState([])
+    const [isTeacher, setTeacher] = useState(false)
     const cookies = new Cookies();
     let idProject = cookies.get('obs-course')
     //console.log(idProject)
@@ -50,12 +54,15 @@ function InsideCourse() {
                 window.location.replace('./')
             }
             else {
-                if (response1.data.validate.rol === "Estudiante") {
+                if (response1.data.validate.rol === "Estudiante" || response1.data.validate.rol === "Lider") {
                     //console.log(response1.data.validate)
                     setRol(response1.data.validate.rol)
                     setAuto(response1.data.validate.Estado)
                     setEmail(response1.data.validate.email)
                     setAuth(response1.data.validate.validacion)
+                    if (response1.data.validate.rol === "Lider") {
+                        setTeacher(true)
+                    }
                 }
                 else {
                     Swal.fire({
@@ -83,30 +90,83 @@ function InsideCourse() {
     }, [data])
     console.log(notes)
 
-    const editar = (idNote) =>{
+    const revisar = (idNote) => {
         //console.log(idNote)
-        if(rol==="Lider"){
-            console.log(idNote)
+        if (rol === "Lider") {
+            const cookies = new Cookies();
+            cookies.set('id-note', idNote, { maxAge: 10 * 60 }, { path: '/' })
+            window.location.href = './commentNote';
         }
-        else{
+        else {
             Swal.fire({
-                title:"Advertencia",
-                text:"No tiene el permiso de editar",
-                icon:"warning"
+                title: "Advertencia",
+                text: "No tiene el permiso de editar",
+                icon: "warning"
             })
         }
     }
 
-    const responseNote = (idNote) =>{
+    const responseNote = (idNote) => {
+        if (rol === "Lider") {
+            Swal.fire({
+                title: "Advertencia",
+                text: "Solo estudiantes pueden responder",
+                icons: "warning"
+            })
+        }
+        else {
+            const cookies = new Cookies();
+            cookies.set('id-note', idNote, { maxAge: 10 * 60 }, { path: '/' })
+            window.location.href ='./resposeNote'
+        }
+    }
+
+    const addNote = (idProject) => {
+        const cookies = new Cookies();
+        cookies.set('obs-course', idProject, { maxAge: 10 * 60 }, { path: '/' })
+        window.location.href ='./addNote'
+    }
+
+    const [delNoteForm] = useMutation(delNoteql)
+    const eliminar = async (idNote) => {
+        Swal.fire({
+            title: '¿Esta seguro?',
+            text: "La nota se eliminara",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, quiero borrar esto!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await delNoteForm(
+                    {
+                        variables: { idNote }
+                    }
+                )
+                Swal.fire(
+                    'Borrado!',
+                    'La nota ha sido borrada exitosamente.',
+                    'success'
+                )
+                window.location.href = './insideCourse'
+            }
+        })
+    }
+
+    const editar = (idNote)=>{
         const cookies = new Cookies();
         cookies.set('id-note', idNote, { maxAge: 10 * 60 }, { path: '/' })
-        window.location.replace('./resposeNote')
+        window.location.href ='./updateNote'
     }
+
 
     return (
         <div className="container">
-            <Navbar className="justify-content-center">
-                <Navbar.Brand>{tittle}</Navbar.Brand>
+            <Navbar fixed="bottom">
+                <InputGroup className="justify-content-start">
+                    {isTeacher && <Button className="addNote" align-items="start" onClick={() => addNote(idProject)}><IoAddCircle size="2rem" color="rgb(100, 200, 200)" /></Button>}
+                </InputGroup>
             </Navbar>
             <Row xs={1} md={3} className="g-20">
                 {notes.map((val, key) => {
@@ -116,7 +176,9 @@ function InsideCourse() {
                                 <Card.Body className="card-body">
                                     <InputGroup className="justify-content-end">
                                         <Card.Title className="tittle">{val.note}</Card.Title>
-                                        <Button className="Editar" align-items="end" onClick={()=> editar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                        {isTeacher && <Button className="Revisar" align-items="end" onClick={() => revisar(val._id)}><FaBrain size="1.5rem" color="rgb(22, 148, 232)" /></Button>}
+                                        {isTeacher && <Button className="EditarNote" align-items="end" onClick={() => editar(val._id)}><AiFillEdit size="1.5rem" color="rgb(22, 148, 232)" /></Button>}
+                                        {isTeacher && <Button className="Eliminar" align-items="end" onClick={() => eliminar(val._id)}><MdDelete size="1.5rem" color="rgb(225, 100  , 100)" /></Button>}
                                     </InputGroup>
                                     <Card.Subtitle className="mb-2 text-muted">EducaTEam</Card.Subtitle>
                                     <InputGroup className="mb-3">
@@ -130,7 +192,7 @@ function InsideCourse() {
                                         </FloatingLabel>
                                     </InputGroup>
                                     <InputGroup className="justify-content-center">
-                                        <Button className="Responder" align="center" onClick={()=>responseNote(val._id)}><AiOutlineSend size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                        <Button className="Responder" align="center" onClick={() => responseNote(val._id)}><AiOutlineSend size="1.5rem" color="rgb(22, 148, 232)" /></Button>
                                     </InputGroup>
                                 </Card.Body>
                             </Card>

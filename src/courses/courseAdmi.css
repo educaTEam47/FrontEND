@@ -147,7 +147,75 @@
 .Responder:hover::after{
     text-align: center;
     content: "Responder";
-    margin-top: 2%;
+    margin-top: 70%;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
+
+.Revisar{
+    background: none;
+    border: none;
+}
+.Revisar:hover{
+    background: rgb(63, 71, 97);
+}
+.Revisar::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Revisar:hover::after{
+    text-align: center;
+    content: "Revisar";
+    margin-top: 70%;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
+
+.EditarNote{
+    background: none;
+    border: none;
+}
+.EditarNote:hover{
+    background: rgb(63, 71, 97);
+}
+.EditarNote::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.EditarNote:hover::after{
+    text-align: center;
+    content: "Editar";
+    margin-top: 70%;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
+.addNote{
+    background: none;
+    border: none;
+}
+.addNote:hover{
+    background: rgb(63, 71, 97);
+}
+.addNote::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.addNote:hover::after{
+    text-align: center;
+    content: "Agregar Nota";
+    margin-bottom: 100%;
     width: 100px;
     height: 30px;
     position: absolute;
