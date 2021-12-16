@@ -172,3 +172,20 @@ mutation validateToken($token:String!){
   }
 }
 `
+export const addResponseql = gql ` 
+    mutation addRes($email:String!,$idnote:ID!,$teacher:String,$student:String,
+								$response:String,$fecha:String){
+  addResponse(email:$email,idnote:$idnote,input:{
+    teacher:$teacher
+    student:$student
+    response:$response
+    fecha:$fecha
+  }){
+    notes{
+      note
+    }
+    add
+    response
+  }
+}
+`

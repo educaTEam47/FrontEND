@@ -92,4 +92,18 @@ query GetNote($idProject:ID!){
   }
 }
 `
+export const getNotql = gql ` 
+query getNote($idNote:ID!){
+  getNot(idNote:$idNote){
+    notes{
+      note
+      description
+      response{
+        student
+        response
+      }
+    }
+  }
+}
+`
 

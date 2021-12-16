@@ -81,7 +81,7 @@ function InsideCourse() {
             }
         }
     }, [data])
-    //console.log(notes)
+    console.log(notes)
 
     const editar = (idNote) =>{
         //console.log(idNote)
@@ -97,9 +97,9 @@ function InsideCourse() {
         }
     }
 
-    const responseNote = () =>{
+    const responseNote = (idNote) =>{
         const cookies = new Cookies();
-        cookies.set('id-note', idProject, { maxAge: 10 * 60 }, { path: '/' })
+        cookies.set('id-note', idNote, { maxAge: 10 * 60 }, { path: '/' })
         window.location.replace('./resposeNote')
     }
 
@@ -130,7 +130,7 @@ function InsideCourse() {
                                         </FloatingLabel>
                                     </InputGroup>
                                     <InputGroup className="justify-content-center">
-                                        <Button className="Responder" align="center" onClick={responseNote}><AiOutlineSend size="1.5rem" color="rgb(22, 148, 232)" /></Button>
+                                        <Button className="Responder" align="center" onClick={()=>responseNote(val._id)}><AiOutlineSend size="1.5rem" color="rgb(22, 148, 232)" /></Button>
                                     </InputGroup>
                                 </Card.Body>
                             </Card>
