@@ -76,6 +76,7 @@ function Header() {
                         {teacher && <Nav.Link href="/createCourse">Curso Nuevo</Nav.Link>}
                         {admin && <Nav.Link href="/allUsers">Todos los usuarios</Nav.Link>}
                         {admin && <Nav.Link href="/getProjectsAdmi">Todos los Proyectos</Nav.Link>}
+                        {isLogged && <Nav.Link href="/updateUser">Actualiza tus datos</Nav.Link>}
                         {(admin || teacher) && <Nav.Link href="/user">Busca un usuario</Nav.Link>}
                         {!isLogged && <Nav.Link href="/register">Registrate</Nav.Link>}
                         {isLogged && <Nav.Link className="Logout" onClick={logout}>Cerrar Sesion</Nav.Link>}
