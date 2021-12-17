@@ -277,3 +277,11 @@ mutation addNoti($email:String!,$estado:Boolean,$note:ID){
   }
 }
 `
+export const updateNotiql = gql` 
+mutation updateNoti($email:String!,$estado:Boolean,$idnote:ID){
+  updateNoti(email:$email,input:{
+    note:$idnote
+    estado:$estado
+  })
+}
+`

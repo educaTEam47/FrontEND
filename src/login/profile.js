@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
+import { Card, InputGroup, FormControl, Button, Navbar, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
-import { validateql, addTeacherql, delTeacherql } from '../mutations/mutation'
+import { validateql, updateNotiql, delTeacherql } from '../mutations/mutation'
 import { getUserql, getNotql } from '../queries/queries'
 import { useQuery, useMutation } from '@apollo/client'
 import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
@@ -17,6 +17,7 @@ import './login.css'
 function Profile() {
 
     const [idNoteArray, setIdNote] = useState([])
+    const [idNote, setidNoteID] = useState("")
     const [email, setEmail] = useState("")
 
     //---------------VALIDATE LOGIN     -------------------------------------------------------------------
@@ -93,36 +94,54 @@ function Profile() {
     const { data } = useQuery(getNotql, {
         variables: { idNote: idNoteArray.note }
     })
-    //console.log(data)
+    console.log(data)
+    const [tittle,setTittle]=useState("")
+    const [nota,SetNota]= useState("")
+    useEffect(()=>{
+        if(data){
+            if(data.getNot){
+                if(data.getNot.notes){
+                    SetNota(data.getNot.notes.note)
+                    setTittle(data.getNot.notes.project.tittle)
+                }
+            }
+        }
+    },[data])
+
+    const [show, setShow] = useState(true);
 
     return (
         <div className="container">
-            {
-                !idNoteArray.estado && <div>
-                    <Card className="text-center">
-                        <Card.Header></Card.Header>
-                        <Card.Body>
-                            <Card.Title>Bienvenid@ {name}</Card.Title>
-                            <Card.Text>
-                                Pagina PlaceHolder para login Exitoso
-                            </Card.Text>
-                            <Button onClick={testInfo} variant="primary" >Pruebame</Button>
-                        </Card.Body>
-                        <Card.Footer className="text-muted">EducaTEam, de la academia a tu mesa</Card.Footer>
-                    </Card>
-                </div>
-            }
-            {console.log(idNoteArray.estado)}
+            <Navbar fixed="bottom">
+                {
+                    !idNoteArray.estado &&
+                    <>
+                        <Alert show={show} variant="success">
+                            <Alert.Heading>{tittle}</Alert.Heading>
+                            <p>
+                                {nota}
+                            </p>
+                            <hr />
+                            <div className="d-flex justify-content-end">
+                                <Button onClick={() => setShow(false)} variant="outline-success">
+                                    Cerrar Notificacion
+                                </Button>
+                            </div>
+                        </Alert>
+
+                        {!show && <Button onClick={() => setShow(true)}>Notificacion</Button>}
+                    </>
+                }
+            </Navbar>
             <Card className="text-center">
                 <Card.Header></Card.Header>
                 <Card.Body>
                     <Card.Title>Bienvenid@ {name}</Card.Title>
                     <Card.Text>
-                        Pagina PlaceHolder para login Exitoso
+                        <h1>Disfruta de nuestros servicios</h1>
                     </Card.Text>
-                    <Button onClick={testInfo} variant="primary" >Pruebame</Button>
                 </Card.Body>
-                <Card.Footer className="text-muted">EducaTEam, de la academia a tu mesa</Card.Footer>
+                <Card.Footer className="text-muted"><h4>EducaTEam, de la academia a tu mesa</h4></Card.Footer>
             </Card>
         </div>
     )
