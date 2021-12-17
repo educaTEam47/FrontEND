@@ -9,7 +9,6 @@ import Cookies from "universal-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function UpdateUser() {
-    const [id, setid] = useState('')
     const [nombres, setnombres] = useState('')
     const [apellidos, setapellidos] = useState('')
     const [identificacion, setidentificacion] = useState('')
@@ -18,7 +17,6 @@ function UpdateUser() {
     const [email, setemail] = useState('')
     const cookies = new Cookies();
     const emailCookie = cookies.get('edit-User')
-    let token = localStorage.getItem('token')
 
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')

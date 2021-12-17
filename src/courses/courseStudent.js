@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table, Navbar } from 'react-bootstrap';
-import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
+import {  Button,Table} from 'react-bootstrap';
+import { validateql, addTeacherql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
-import { AiFillEdit, AiOutlineUserAdd, AiFillEye } from 'react-icons/ai'
+import { AiFillEye } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
-import { GrAddCircle } from 'react-icons/gr'
 import { getUserql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from '@apollo/client'
 import Swal from 'sweetalert2'
-import { validateql, addTeacherql, delTeacherql, updateUserql } from '../mutations/mutation'
+import { validateql, updateUserql } from '../mutations/mutation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUsersql } from '../queries/queries'
 import { Button, Table, FormControl, DropdownButton, Dropdown, InputGroup } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
-import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
+import { AiFillEdit } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
 import Cookies from "universal-cookie";
 import './getUsers.css'

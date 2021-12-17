@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Card, InputGroup, FormControl, Button } from 'react-bootstrap';
 import { createProjectql, validateql, addTeacherql } from '../mutations/mutation'
 import { useMutation } from '@apollo/client'
 

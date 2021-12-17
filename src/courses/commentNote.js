@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, Form, Button, FormControl, Row, Col, FloatingLabel } from 'react-bootstrap';
-import { createProjectql, validateql, addResponseql } from '../mutations/mutation'
-import { FcInfo } from 'react-icons/fc'
-import { AiFillEdit, AiOutlineUserAdd, AiFillEye, AiOutlineSend } from 'react-icons/ai'
-import { FiDelete } from 'react-icons/fi'
-import { getUserql, getNotql } from '../queries/queries'
+import { Card, InputGroup, Form, FormControl, FloatingLabel } from 'react-bootstrap';
+import {  validateql} from '../mutations/mutation'
+import {  getNotql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'
 
@@ -15,8 +12,6 @@ function CommentNote() {
     const [auto, setAuto] = useState("")
     const [note, setNote] = useState("")
     const [description, setDescription] = useState("")
-    const [student, setStudent] = useState("")
-    const [fecha, setFecha] = useState("")
     const [respuestas, setRespuestas] = useState([])
 
     //----------------------------------------------------------------------------------------------------------------

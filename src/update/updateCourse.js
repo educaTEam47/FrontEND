@@ -4,7 +4,7 @@ import { updateProjectql, delTeacherql, addTeacherql, addStudentql, delStudentql
 import { getCourseql } from '../queries/queries'
 import Swal from 'sweetalert2'
 import { useMutation, useQuery } from '@apollo/client'
-import { Card, InputGroup, FormControl, Button, FloatingLabel, Form, Dropdown, Table } from 'react-bootstrap';
+import { Card, InputGroup, FormControl, Button, FloatingLabel, Form, Table } from 'react-bootstrap';
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'

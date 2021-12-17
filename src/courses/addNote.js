@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, Form, Button, FloatingLabel, Row, Col, Navbar } from 'react-bootstrap';
+import { Card, InputGroup, Form, Button, FloatingLabel } from 'react-bootstrap';
 import { addNoteql, validateql, addTeacherql,addNotiql } from '../mutations/mutation'
-import { FcInfo } from 'react-icons/fc'
-import { AiFillEdit, AiOutlineUserAdd, AiFillEye, AiOutlineSend } from 'react-icons/ai'
-import { FiDelete } from 'react-icons/fi'
-import { FaBrain } from 'react-icons/fa'
-import { GrAddCircle } from 'react-icons/gr'
-import { IoAddCircle } from 'react-icons/io5'
-import { getUserql, getNoteql, getCourseql } from '../queries/queries'
+import { AiOutlineSend } from 'react-icons/ai'
+import {getCourseql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'
 

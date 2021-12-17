@@ -2,15 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, Navbar, Dropdown, Table, Alert, AlertDismissibleExample } from 'react-bootstrap';
-import { FcInfo } from 'react-icons/fc'
-import { validateql, updateNotiql, delTeacherql } from '../mutations/mutation'
+import { Card,Button, Navbar, Alert, } from 'react-bootstrap';
+import { validateql} from '../mutations/mutation'
 import { getUserql, getNotql } from '../queries/queries'
 import { useQuery, useMutation } from '@apollo/client'
-import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai'
-import { FiDelete } from 'react-icons/fi'
-import Cookies from "universal-cookie";
-import jwt from 'jsonwebtoken'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './login.css'
 

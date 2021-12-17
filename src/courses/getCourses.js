@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Swal from 'sweetalert2'
-import { Card, InputGroup, FormControl, Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
+import {  Button, Table } from 'react-bootstrap';
 import { getProjects } from '../queries/queries'
 import { useQuery } from '@apollo/client'
 
