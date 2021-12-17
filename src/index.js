@@ -10,7 +10,7 @@ import Login from './login/login'
 import Header from './header';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
+  uri: 'https://backeducateam.herokuapp.com/',
 });
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
