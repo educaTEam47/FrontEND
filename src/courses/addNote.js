@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
 import { Card, InputGroup, Form, Button, FloatingLabel, Row, Col, Navbar } from 'react-bootstrap';
-import { addNoteql, validateql, addTeacherql } from '../mutations/mutation'
+import { addNoteql, validateql, addTeacherql,addNotiql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEdit, AiOutlineUserAdd, AiFillEye, AiOutlineSend } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
 import { FaBrain } from 'react-icons/fa'
 import { GrAddCircle } from 'react-icons/gr'
 import { IoAddCircle } from 'react-icons/io5'
-import { getUserql, getNoteql } from '../queries/queries'
+import { getUserql, getNoteql, getCourseql } from '../queries/queries'
 import Cookies from "universal-cookie";
 import { useMutation, useQuery } from '@apollo/client'
 
@@ -18,6 +18,7 @@ function AddNote() {
     const [rol, setRol] = useState("")
     const [note, setNote] = useState("")
     const [description, setDescription] = useState("")
+    let addresponse
     const cookies = new Cookies();
     let idProject = cookies.get('obs-course')
     //console.log(idProject)
@@ -72,6 +73,36 @@ function AddNote() {
         }
     }
     //################################################################################################################
+    const { data } = useQuery(getCourseql, {
+        variables: { id: idProject }
+    })
+    //console.log(data)
+    const [people,setPeople]=useState([])
+    useEffect(() => {
+        if (data) {
+            if (data.getProject) {
+                if (data.getProject.people) {
+                    setPeople(data.getProject.people.map(p=>p.email))
+                }
+            }
+        }
+    },[data])
+    
+
+    const [updateForm] = useMutation(addNotiql)
+    const students = async (idnote)=>{
+        console.log(idnote,"Este es el ID")
+        data.getProject.people.map(async(val,key)=>{
+            const responseUpdate = await updateForm(
+                {
+                    variables:{email:val.email,estado:false,note:idnote}
+                }
+            )
+            console.log(responseUpdate)
+            window.location.href = './insideCourse'
+        })
+    }
+
 
     const [addNoteForm] = useMutation(addNoteql)
 
@@ -86,7 +117,7 @@ function AddNote() {
             confirmButtonText: 'Si, quiero agregar la nota!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const addresponse = await addNoteForm(
+                addresponse = await addNoteForm(
                     {
                         variables: { email, idProject, project: idProject, teacher: email, note, description }
                     }
@@ -96,11 +127,12 @@ function AddNote() {
                     'La nota ha sido agregada corretamente',
                     'success'
                 )
-                window.location.href='./insideCourse'
+                //window.location.href = './insideCourse'
+                setTimeout(students(addresponse.data.addNote.notes._id),2000);
             }
+            
         })
     }
-
 
     return (
         <div className="container">

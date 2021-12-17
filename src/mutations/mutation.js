@@ -60,6 +60,11 @@ mutation updateUserql($email:String!,$nombres:String,$apellidos:String,$identifi
       identificacion
       numIdentificacion
       Carrera
+      Estado
+      EstadoNote {
+        note
+        estado
+      }
     }
     error{
       path
@@ -190,11 +195,10 @@ export const addResponseql = gql `
 `
 export const addNoteql =gql` 
 mutation addNote($email:String!, $idProject:ID!,$project:String,$teacher:String
-									$student:String,$note:String,$calificacion:String,$description:String){
+								,$note:String,$calificacion:String,$description:String){
   addNote(email:$email,idProject:$idProject,,input:{
     project:$project
     teacher:$teacher
-    student:$student
     note:$note
     description:$description
     calificacion:$calificacion
@@ -251,6 +255,21 @@ mutation updateNote($idNote:ID!,$note:String,$description:String){
       description
     }
     update
+    error{
+      path
+      message
+    }
+  }
+}
+`
+export const addNotiql =gql` 
+mutation addNoti($email:String!,$estado:Boolean,$note:ID){
+  addNotificacion(email:$email,input:{
+    estado:$estado
+   	note:$note 
+  })
+  {
+    send
     error{
       path
       message

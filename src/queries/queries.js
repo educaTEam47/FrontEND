@@ -25,6 +25,10 @@ query user($email:String!){
             numIdentificacion
             Carrera
             Estado
+            EstadoNote {
+              note
+              estado
+            }
             cursos{
               _id
               tittle
@@ -98,6 +102,9 @@ query getNote($idNote:ID!){
     notes{
       note
       description
+      project{
+        tittle
+      }
       response{
         student
         response

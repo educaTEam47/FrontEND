@@ -95,7 +95,7 @@ function UpdateUser() {
     //console.log(token)
     const [updateForm] = useMutation(updateUserql)
 
-    const enviar = async (e) => {
+    const enviar = async () => {
         const response = await updateForm(
             {
                 variables: { email, nombres, apellidos, identificacion, numIdentificacion, Carrera },
