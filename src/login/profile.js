@@ -109,7 +109,7 @@ function Profile() {
         <div className="container">
             <Navbar fixed="bottom">
                 {
-                    !idNoteArray.estado &&
+                    !idNoteArray.estado>0 &&
                     <>
                         <Alert show={show} variant="success">
                             <Alert.Heading>{tittle}</Alert.Heading>
