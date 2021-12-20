@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2'
 import {  Button,Table} from 'react-bootstrap';
-import { validateql, addTeacherql } from '../mutations/mutation'
+import { validateql, addTeacherql,delStudentql } from '../mutations/mutation'
 import { FcInfo } from 'react-icons/fc'
 import { AiFillEye } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
@@ -13,6 +13,7 @@ function CourseStudent() {
     const [email, setEmail] = useState("")
     const [auto, setAuto] = useState("")
     const [cursos, setCursos] = useState([])
+    const [estado,setEstado]=useState("")
     //----------------------------------------------------------------------------------------------------------------
     let tokenStorage = localStorage.getItem('token')
     useEffect(() => {
@@ -47,6 +48,7 @@ function CourseStudent() {
                 if (response1.data.validate.rol === "Estudiante") {
                     //console.log(response1.data.validate)
                     setAuto(response1.data.validate.Estado)
+                    setEstado(response1.data.validate.Estado)
                     setEmail(response1.data.validate.email)
                     setAuth(response1.data.validate.validacion)
                 }
@@ -84,6 +86,55 @@ function CourseStudent() {
         window.location.href = './insideCourse'
     }
 
+    const ObserCourse = (idProject) => {
+        let filtro = cursos.filter(p => p._id == idProject)
+        Swal.fire({
+            title: filtro[0].tittle,
+            text: filtro[0].description,
+            icon: 'info'
+        })
+    }
+
+    const [delStudentForm] = useMutation(delStudentql)
+    const delStudent = async (idProject) => {
+        //console.log(idProject)
+        if (estado === "Desactivar") {
+            Swal.fire({
+                title: "Error",
+                text: "No puede eliminar los estudiantes, su estado no lo permite",
+                icon: "error"
+            })
+        }
+        else {
+            if (idProject) {
+                Swal.fire({
+                    title: '¿Esta seguro?',
+                    text: "Saldra del curso y perdera todos sus datos",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, quiero salir del curso'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const response = await delStudentForm(
+                            {
+                                variables: { idProject, email}
+                            }
+                        )
+                        Swal.fire(
+                            'Eliminado!',
+                            'Ha cancelado el curso',
+                            'success'
+                        )
+                        window.location.replace('./courseStudent')
+                    }
+                })
+            }
+
+        }
+    }
+
     return (
         <div className="container">
             <Table striped bordered hover variant="dark" className="text-center">
@@ -105,9 +156,9 @@ function CourseStudent() {
                                 <td>{val.description}</td>
                                 <td>{val.Horas}</td>
                                 <td>
-                                    <Button className="Observar"><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
+                                    <Button className="Observar" onClick={()=> ObserCourse(val._id)}><FcInfo className="Observar" size="1.5rem"></FcInfo></Button>
                                     <Button className="Ir" onClick={() => irCurso(val._id)}><AiFillEye size="1.5rem" color="rgb(22, 148, 232)" /></Button>
-                                    <Button className="Eliminar" ><FiDelete size="1.5rem" color="red" /></Button>
+                                    <Button className="Eliminar" onClick={()=> delStudent(val._id)} ><FiDelete size="1.5rem" color="red" /></Button>
                                 </td>
                             </tr>
                         )
