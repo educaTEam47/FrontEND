@@ -302,10 +302,20 @@ function EditProjectTeacher() {
             }
         })
     }
-
+    const [columnas,setmd]=useState(1)
+    useEffect(()=>{
+        console.log(solicitudesProject.length)
+        if(solicitudesProject.length<=0){
+            setmd(1)
+        }
+        else{
+            setmd(2)
+        }
+    },[solicitudForm])
+    console.log(columnas)
     return (
         <div className="container">
-            <Row xs={1} md={2} className="g-4">
+            <Row xs={1} md={columnas} className="g-4">
                 <Col>
                     <Card className="text-center" style={{ width: '25rem' }}>
                         <Card.Body className="card-body">
@@ -351,8 +361,9 @@ function EditProjectTeacher() {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col>
-                    {solicitudesProject.length > 0 &&
+                {solicitudesProject.length > 0 &&
+                    <Col>
+
                         <Table className="text-center">
                             <thead>
                                 <tr>
@@ -380,8 +391,9 @@ function EditProjectTeacher() {
                                 }
                             </tbody>
                         </Table>
-                    }
-                </Col>
+
+                    </Col>
+                }
             </Row>
             <hr></hr>
             <Table striped bordered hover variant="dark" className="text-center">
