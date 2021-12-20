@@ -113,4 +113,16 @@ query getNote($idNote:ID!){
   }
 }
 `
+export const getSolicitudes = gql` 
+query getSolictud($idProject:ID!){
+  getSolicitudes(idProject:$idProject){
+    solicitudes {
+      email
+      project{
+        tittle
+      }
+    }
+  }
+}
+`
 

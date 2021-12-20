@@ -285,3 +285,26 @@ mutation updateNoti($email:String!,$estado:Boolean,$idnote:ID){
   })
 }
 `
+export const solicitud =gql` 
+mutation solicitud($idProject:ID!,$email:String!){
+  solicitudes(idProject:$idProject,email:$email) {
+    error{
+      path
+      message
+    }
+    estado
+  }
+}
+`
+export const delsolicitud=gql` 
+mutation delsolicitud($idProject:ID!,$email:String!){
+  delSolicitud(idProject:$idProject,email:$email) {
+    message
+    estado
+    error{
+      path
+      message
+    }
+  }
+}
+`

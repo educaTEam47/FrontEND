@@ -20,6 +20,7 @@ import ResponseNote from './notes/responseNote';
 import CommentNote from './courses/commentNote';
 import AddNote from './courses/addNote';
 import UpdateNote from './update/updateNote';
+import AddCourse from './courses/addCourse';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path='/commentNote' element={<CommentNote />} />
         <Route path='/addNote' element={<AddNote />} />
         <Route path='/updateNote' element={<UpdateNote />} />
+        <Route path='/addCourse' element={<AddCourse/>} />
       </Routes>
     </div>
   );

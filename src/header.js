@@ -84,6 +84,7 @@ function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {!isLogged && <Nav.Link href="/login">Inicia</Nav.Link>}
+                        {student && <Nav.Link href="addCourse">Agregar Curso</Nav.Link>}
                         {student && <Nav.Link href="/courseStudent">Mis cursos</Nav.Link>}
                         {teacher && <Nav.Link href="/courseteacher">Mis cursos</Nav.Link>}
                         {teacher && <Nav.Link href="/createCourse">Curso Nuevo</Nav.Link>}

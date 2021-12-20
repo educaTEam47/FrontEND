@@ -221,3 +221,25 @@
     position: absolute;
     background-color: rgb(38, 38, 60);
 }
+.Agregar{
+    background: none;
+    border: none;
+}
+.Agregar:hover{
+    background: rgb(63, 71, 97);
+}
+.Agregar::after{
+    text-align: center;
+    content:"";
+    position: absolute;
+    transition: .1s ease-in-out all;
+}
+.Agregar:hover::after{
+    text-align: center;
+    content: "Agregar Curso";
+    margin-bottom: 100%;
+    width: 100px;
+    height: 60px;
+    position: absolute;
+    background-color: rgb(38, 38, 60);
+}
