@@ -8,7 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter} from "react-router-dom"
 
 const httpLink = createHttpLink({
-  uri: 'https://backeducateam.herokuapp.com/',
+  uri: 'http://localhost:8000/',
 });
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
